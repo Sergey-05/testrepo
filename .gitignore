@@ -1,0 +1,44 @@
+# зависимости
+node_modules/
+
+# production сборка
+.next/
+out/
+
+# окружение
+.env
+.env.local
+.env.*.local
+
+# логи
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE/редактор
+.vscode/
+.idea/
+*.swp
+
+# CI
+coverage/
+*.test.*
+__tests__/
+
+# Docker
+docker-compose*
+.dockerignore
+
+# операционные системы
+.DS_Store
+Thumbs.db
+
+# by GitHub Actions cache
+/tmp/.buildx-cache/
+
+# временные файлы
+*.log
+*.pid
+*.seed
+*.tgz

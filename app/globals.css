@@ -1,0 +1,254 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+input, textarea, select {
+  -webkit-text-size-adjust: 100%; /* Предотвращаем изменение размера текста */
+  touch-action: manipulation; /* Упрощаем взаимодействие с полями */
+}
+
+:root {
+  --background: #000000;
+  --foreground: #ededed;
+  --glass-bg: rgba(30, 30, 30, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --gradient-purple: linear-gradient(135deg, #4C1D95 0%, #7C3AED 100%);
+  --gradient-blue: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+  --gradient-green: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+  --shadow-purple: 0 3px 10px rgba(124, 58, 237, 0.3);
+  --shadow-blue: 0 3px 10px rgba(59, 130, 246, 0.3);
+  --shadow-green: 0 3px 10px rgba(16, 185, 129, 0.3);
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  -webkit-user-select: none; /* Предотвращаем выделение текста */
+  user-select: none;
+}
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+}
+
+.text-gradient-purple {
+  background: var(--gradient-purple);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-blue {
+  background: var(--gradient-blue);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-green {
+  background: var(--gradient-green);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes progress-bar {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-progress-bar {
+  animation: progress-bar 5s linear forwards;
+}
+
+.transition-shape {
+  transition: all 0.3s ease;
+}
+
+.dot-inactive {
+  width: 0.3rem;
+  height: 0.3rem;
+  background-color: #5b5b5b;
+  border-radius: 9999px;
+}
+
+.dot-active {
+  width: 2rem;
+  height: 0.3rem;
+  border-radius: 9999px;
+  background-color: #8f5aff;
+  overflow: hidden;
+  position: relative;
+}
+
+.dot-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background-color: #c29aff;
+  transition: width 0.2s linear;
+}
+
+
+
+@layer utilities {
+  .text-gradient {
+    background: var(--gradient-purple);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+.text-2xs {
+  font-size: 0.65rem;
+  line-height: 1rem;
+}
+
+.tariff-card-bg::before {
+  content: '';
+  position: absolute;
+  bottom: -20%;
+  left: -20%;
+  width: 250%;
+  height: 250%;
+  background: radial-gradient(ellipse at bottom left, rgba(124,58,237,0.2), transparent 60%);
+  opacity: 0.5;
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.animate-check {
+                animation: check 0.3s ease-out;
+              }
+              @keyframes check {
+                0% {
+                  opacity: 0.5;
+                  transform: scale(0.5);
+                }
+                100% {
+                  opacity: 1;
+                  transform: scale(1);
+                }
+              }
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+.ripple::after {
+  content: '';
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  transform: scale(0);
+  pointer-events: none;
+  z-index: 10;
+  animation: ripple 0.6s linear;
+}
+
+.ripple-span {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 100;
+  animation: ripple 0.6s linear;
+}
+
+  .container-card-charts {
+    position: absolute;
+    top: 30;
+    right: 0;
+    width: 200px; /* Фиксированная ширина из globals.css */
+    height: 100px; /* Фиксированная высота для SVG */
+    background: transparent;
+  }
+  .card-charts {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    display: flex;
+    align-items: flex-start; /* Прижимаем к верхнему краю */
+    justify-content: flex-end; /* Прижимаем к правому краю */
+  }
+  .charts-lines {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .charts-lines i {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+  }
+  .lines {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px; /* Соответствует ширине графика */
+    height: 100px; /* Соответствует высоте графика */
+    display: flex;
+    justify-content: space-between;
+  }
+  .lines span {
+    width: 1px;
+    height: 100%;
+    margin: 0 10px;
+    background: linear-gradient(
+      to top,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+  .icon-week path {
+    opacity: 0.8 !important; /* Переопределяем opacity из globals.css */
+    animation: draw 8s ease infinite;
+  }
+  .icon-month path {
+    opacity: 0.8 !important; /* Переопределяем opacity для icon-month */
+    animation: draw 8s 3s ease infinite;
+  }
+  @keyframes draw {
+    0% {
+      stroke-dashoffset: 1500;
+      opacity: 0.8;
+    }
+    50% {
+      stroke-dashoffset: 0;
+      opacity: 0.8;
+    }
+    100% {
+      stroke-dashoffset: -1500;
+      opacity: 0.8;
+    }
+  }
+
+.inner-shadow-box {
+  background-color: #1f1f1f;
+  border-radius: 9999px;
+  box-shadow:
+    inset 3px 3px 6px rgba(0, 0, 0, 0.6),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.04);
+  background-image: linear-gradient(145deg, #1a1a1a, #252525);
+  transition: box-shadow 0.2s ease;
+}
+
