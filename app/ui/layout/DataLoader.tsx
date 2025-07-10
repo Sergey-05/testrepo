@@ -203,6 +203,7 @@ export default function DataLoader() {
   const [progress, setProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [webAppReady, setWebAppReady] = useState(false);
+  const [hasShownModal, setHasShownModal] = useState(false);
 
   const { showNotification } = useNotification();
   const WebApp = useWebApp();
@@ -337,7 +338,10 @@ export default function DataLoader() {
 
         if (isMounted) {
           setIsVisible(false);
-          setTimeout(() => setIsDataLoaded(true), 500);
+          setTimeout(() => {
+            setIsDataLoaded(true);
+            setHasShownModal(true); // Устанавливаем флаг после загрузки
+          }, 500);
         }
       } catch (error) {
         console.error('Ошибка загрузки данных:', error);
@@ -365,5 +369,5 @@ export default function DataLoader() {
     return <LoadingScreen progress={progress} isVisible={isVisible} />;
   }
 
-  return <DepositEarningsModal />;
+  return hasShownModal ? null : <DepositEarningsModal />;
 }
