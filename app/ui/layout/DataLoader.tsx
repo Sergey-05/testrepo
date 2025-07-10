@@ -211,6 +211,11 @@ export default function DataLoader() {
 
   const [canShowModal, setCanShowModal] = useState(false);
 
+  const handleModalShown = () => {
+    setHasShownModal(true);
+    sessionStorage.setItem('hasShownModal', 'true');
+  };
+
   const { showNotification } = useNotification();
   const WebApp = useWebApp();
 
@@ -381,10 +386,6 @@ export default function DataLoader() {
   if (!isDataLoaded) {
     return <LoadingScreen progress={progress} isVisible={isVisible} />;
   }
-  const handleModalShown = () => {
-    setHasShownModal(true);
-    sessionStorage.setItem('hasShownModal', 'true');
-  };
 
   return (
     <>

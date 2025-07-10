@@ -121,9 +121,7 @@ export default function DepositEarningsModal({
       open={isOpen}
       onOpenChange={(value) => {
         setIsOpen(value);
-        if (value) {
-          onFinish(); // гарантированно вызываем, когда окно ОТКРЫЛОСЬ
-        }
+        if (value) onFinish();
       }}
     >
       <Drawer.Portal>
