@@ -141,7 +141,7 @@ export default function DepositEarningsModal({
         <Drawer.Content className='fixed inset-x-0 bottom-0 z-[110] flex w-full flex-col items-center rounded-t-3xl bg-[radial-gradient(ellipse_at_top,rgba(0,0,0,1)_0%,#120022_100%)] text-white'>
           <div className='relative flex w-full max-w-md flex-col items-center px-6 pb-8 pt-20'>
             {/* Монетки в base64 */}
-            <div className='absolute -top-14 z-20 flex h-24 w-24 items-center justify-center rounded-full border-4 border-[#1e0631] bg-[#0d0d0d]'>
+            <div className='absolute -top-10 z-20 flex h-24 w-24 items-center justify-center rounded-full border-4 border-[#1e0631] bg-[#0d0d0d]'>
               <Image
                 src={coin_img_base64}
                 height={96}
@@ -174,7 +174,7 @@ export default function DepositEarningsModal({
             </button>
 
             {/* Заголовок */}
-            <h2 className='mt-6 text-2xl font-bold text-white'>
+            <h2 className='mt-2 text-2xl font-bold text-white'>
               Вы заработали
             </h2>
 
@@ -201,7 +201,7 @@ export default function DepositEarningsModal({
                 })}{' '}
                 ₽
               </span>
-              <span className='text-sm text-purple-300'>от вклада</span>
+              <span className='text-[16px] text-purple-300'>от вклада</span>
             </div>
 
             {/* Доп. инфо и кнопка */}
@@ -219,7 +219,7 @@ export default function DepositEarningsModal({
               </Link>
             </div>
 
-            <p className='mt-3 text-center text-[10px] text-zinc-500'>
+            <p className='mt-3 text-center text-[12px] text-zinc-500'>
               Не забудь собрать ежедневную награду
             </p>
           </div>
