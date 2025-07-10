@@ -203,6 +203,7 @@ export default function DataLoader() {
   const [isVisible, setIsVisible] = useState(true);
   const [webAppReady, setWebAppReady] = useState(false);
   const [hasShownModal, setHasShownModal] = useState(false);
+  const [canShowModal, setCanShowModal] = useState(false);
 
   const { showNotification } = useNotification();
   const WebApp = useWebApp();
@@ -339,6 +340,7 @@ export default function DataLoader() {
           setIsVisible(false);
           setTimeout(() => {
             setIsDataLoaded(true);
+            setCanShowModal(true);
           }, 500);
         }
       } catch (error) {
@@ -374,5 +376,11 @@ export default function DataLoader() {
     return <LoadingScreen progress={progress} isVisible={isVisible} />;
   }
 
-  return hasShownModal ? null : <DepositEarningsModal />;
+  return (
+    <>
+      {!hasShownModal && canShowModal && (
+        <DepositEarningsModal onFinish={() => setHasShownModal(true)} />
+      )}
+    </>
+  );
 }

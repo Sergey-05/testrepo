@@ -10,7 +10,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { tariffs } from '@/app/lib/constants/tariffs';
 
-export default function DepositEarningsModal() {
+export default function DepositEarningsModal({
+  onFinish,
+}: {
+  onFinish: () => void;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const { user, depositEarnings, setUser, setDepositEarnings } =
     useGlobalStore();
@@ -81,6 +85,7 @@ export default function DepositEarningsModal() {
         // Если накопления уже есть, показываем модальное окно
         if (hasUncollectedEarnings && accumulation > 0) {
           setIsOpen(true);
+          onFinish(); // флаг ставим только если модалка реально будет показана
           return;
         }
 
@@ -90,7 +95,8 @@ export default function DepositEarningsModal() {
           const updatedData = await saveAccum(user.telegram_id, amount);
           setUser(updatedData.user);
           setDepositEarnings(updatedData.depositEarnings);
-          setIsOpen(true); // Открываем модальное окно после начисления
+          setIsOpen(true);
+          onFinish(); // также вызываем
         } else {
           setIsOpen(false);
         }
