@@ -133,16 +133,16 @@ export default function DepositEarningsModal({
       }}
     >
       <Drawer.Portal>
-        <Drawer.Overlay className='fixed inset-0 z-[100] bg-black/40 backdrop-blur-sm' />
+        <Drawer.Overlay className='fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm transition-opacity duration-300' />
 
-        <Drawer.Content className='fixed inset-x-0 bottom-0 z-[110] flex w-full flex-col items-center rounded-t-3xl bg-[radial-gradient(circle_at_top,black_0%,#1e0631_60%)] text-white outline-none'>
-          <div className='relative flex h-full w-full flex-col items-center p-4 pt-20'>
-            <div className='absolute -top-12 z-20 rounded-full border-4 border-[#1e0631] bg-[#0d0d0d] shadow-xl'>
+        <Drawer.Content className='fixed inset-x-0 bottom-0 z-[110] w-full rounded-t-3xl border-t border-purple-800 bg-black/90 shadow-[0_-8px_40px_#6b21a8] backdrop-blur-xl transition-transform duration-300'>
+          <div className='relative flex flex-col items-center px-6 pb-8 pt-20'>
+            <div className='absolute -top-14 z-20 rounded-full border-4 border-[#1e0631] bg-gradient-to-br from-purple-800 via-black to-purple-950 p-2 shadow-lg'>
               <Image
-                src='/coin-BqBBbrtn.webp'
+                src='/coins.webp'
                 alt='Coin'
-                width={96}
-                height={96}
+                width={80}
+                height={80}
                 className='rounded-full'
               />
             </div>
@@ -169,38 +169,31 @@ export default function DepositEarningsModal({
             </button>
 
             <div className='mt-4 text-center'>
-              <p className='flex items-center justify-center gap-2 text-xl font-bold text-white drop-shadow'>
-                <p className='text-xl font-bold text-white drop-shadow'>
-                  Ты заработал
-                </p>
-
-                <p className='flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-300 via-orange-400 to-purple-500 bg-clip-text text-xl font-bold text-transparent drop-shadow'>
-                  {accumulation.toLocaleString('ru-RU', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}{' '}
-                  ₽
-                </p>
+              <p className='text-lg font-semibold text-gray-300'>
+                Ты заработал
               </p>
-              <p className='mt-2 text-sm font-medium text-purple-300'>
-                от Вклада
+              <p className='mt-2 bg-gradient-to-r from-yellow-300 via-orange-400 to-purple-600 bg-clip-text text-3xl font-bold text-transparent drop-shadow'>
+                {accumulation.toLocaleString('ru-RU', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}{' '}
+                ₽
               </p>
+              <p className='mt-1 text-sm text-purple-400'>от вклада</p>
             </div>
 
-            <p className='mt-4 text-center text-sm text-gray-300'>
-              Заходи каждые 24 часа, чтобы получить прибыль!
+            <p className='mt-4 text-center text-sm text-gray-400'>
+              Заходи каждые 24 часа, чтобы получать прибыль
             </p>
 
-            <div className='mt-6 w-full max-w-xs'>
-              <Link
-                href='/cabinet'
-                className='relative block w-full rounded-xl border-2 border-purple-500 bg-transparent px-4 py-3 text-center text-base font-semibold text-purple-300 transition-all hover:border-purple-400 hover:text-white active:scale-95'
-                onClick={() => setIsOpen(false)} // Добавляем закрытие модального окна
-              >
-                <span className='relative z-10'>Собрать</span>
-                <div className='absolute inset-0 z-0 animate-pulse rounded-xl border border-purple-500 opacity-30 blur-sm' />
-              </Link>
-            </div>
+            <Link
+              href='/cabinet'
+              className='relative mt-6 block w-full max-w-xs rounded-xl border border-purple-600 bg-gradient-to-br from-purple-800 to-purple-950 px-5 py-3 text-center text-base font-semibold text-white shadow-md transition hover:border-purple-400 hover:shadow-lg active:scale-95'
+              onClick={() => setIsOpen(false)}
+            >
+              <span className='relative z-10'>Собрать</span>
+              <div className='absolute inset-0 z-0 animate-pulse rounded-xl bg-purple-500 opacity-10 blur-sm' />
+            </Link>
 
             <p className='mt-3 text-center text-xs text-gray-500'>
               Не забудь собрать ежедневную награду
