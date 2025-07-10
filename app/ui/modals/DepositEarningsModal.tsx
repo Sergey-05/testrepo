@@ -142,8 +142,10 @@ export default function DepositEarningsModal({
           <div className='relative flex w-full max-w-md flex-col items-center px-6 pb-8 pt-20'>
             {/* Монетки в base64 */}
             <div className='absolute -top-14 z-20 flex h-24 w-24 items-center justify-center rounded-full border-4 border-[#1e0631] bg-[#0d0d0d]'>
-              <img
+              <Image
                 src={coin_img_base64}
+                height={96}
+                width={96}
                 alt='Bitcoin Coins'
                 className='h-20 w-20 rounded-full object-contain'
               />
