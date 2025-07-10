@@ -182,7 +182,6 @@
 
 //   return null;
 // }
-
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -340,7 +339,6 @@ export default function DataLoader() {
           setIsVisible(false);
           setTimeout(() => {
             setIsDataLoaded(true);
-            setHasShownModal(true); // Устанавливаем флаг после загрузки
           }, 500);
         }
       } catch (error) {
@@ -364,6 +362,13 @@ export default function DataLoader() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [webAppReady]);
+
+  // Устанавливаем hasShownModal после первого рендера модального окна
+  useEffect(() => {
+    if (isDataLoaded && !hasShownModal) {
+      setHasShownModal(true);
+    }
+  }, [isDataLoaded, hasShownModal]);
 
   if (!isDataLoaded) {
     return <LoadingScreen progress={progress} isVisible={isVisible} />;

@@ -173,6 +173,7 @@ export default function DepositEarningsModal() {
               <Link
                 href='/cabinet'
                 className='relative block w-full rounded-xl border-2 border-purple-500 bg-transparent px-4 py-3 text-center text-base font-semibold text-purple-300 transition-all hover:border-purple-400 hover:text-white active:scale-95'
+                onClick={() => setIsOpen(false)} // Добавляем закрытие модального окна
               >
                 <span className='relative z-10'>Собрать</span>
                 <div className='absolute inset-0 z-0 animate-pulse rounded-xl border border-purple-500 opacity-30 blur-sm' />
