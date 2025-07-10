@@ -49,7 +49,7 @@ export default function DepositEarningsModal() {
   useEffect(() => {
     if (
       !user?.deposit_amount ||
-      user.deposit_amount <= 250 ||
+      user.deposit_amount < 250 ||
       !user.last_deposit_at ||
       !currentTariff
     ) {
@@ -66,11 +66,12 @@ export default function DepositEarningsModal() {
           ? new Date(serverTimeHeader).getTime()
           : new Date().getTime();
 
-        // Проверка last_deposit_at
+        // Явная проверка last_deposit_at
         if (!user.last_deposit_at) {
           setIsOpen(false);
           return;
         }
+
         const lastDepositTime = new Date(user.last_deposit_at).getTime();
         const timeDiff = serverTimeMs - lastDepositTime;
         const hasUncollectedEarnings = depositEarnings?.some(
@@ -85,10 +86,8 @@ export default function DepositEarningsModal() {
 
         // Если прошло более 24 часов и нет накоплений, начисляем их
         if (timeDiff > 24 * 60 * 60 * 1000 && !hasUncollectedEarnings) {
-          const updatedData = await saveAccum(
-            user.telegram_id,
-            user.deposit_amount * (currentTariff.rate / 100),
-          );
+          const amount = user.deposit_amount * (currentTariff.rate / 100);
+          const updatedData = await saveAccum(user.telegram_id, amount);
           setUser(updatedData.user);
           setDepositEarnings(updatedData.depositEarnings);
           setIsOpen(true); // Открываем модальное окно после начисления
