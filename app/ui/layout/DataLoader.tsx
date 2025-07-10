@@ -202,19 +202,16 @@ export default function DataLoader() {
   const [progress, setProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [webAppReady, setWebAppReady] = useState(false);
-  const [hasShownModal, setHasShownModal] = useState<boolean>(() => {
+  const hasShownModalRef = useRef<boolean>(false);
+
+  useEffect(() => {
     if (typeof window !== 'undefined') {
-      return sessionStorage.getItem('hasShownModal') === 'true';
+      hasShownModalRef.current =
+        sessionStorage.getItem('hasShownModal') === 'true';
     }
-    return false;
-  });
+  }, []);
 
   const [canShowModal, setCanShowModal] = useState(false);
-
-  const handleModalShown = () => {
-    setHasShownModal(true);
-    sessionStorage.setItem('hasShownModal', 'true');
-  };
 
   const { showNotification } = useNotification();
   const WebApp = useWebApp();
@@ -376,25 +373,17 @@ export default function DataLoader() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [webAppReady]);
 
-  // Устанавливаем hasShownModal после первого рендера модального окна
-  useEffect(() => {
-    if (isDataLoaded && !hasShownModal) {
-      setHasShownModal(true);
-    }
-  }, [isDataLoaded, hasShownModal]);
-
   if (!isDataLoaded) {
     return <LoadingScreen progress={progress} isVisible={isVisible} />;
   }
 
   return (
     <>
-      {canShowModal && (
+      {canShowModal && !hasShownModalRef.current && (
         <DepositEarningsModal
           onFinish={() => {
-            if (!hasShownModal) {
-              handleModalShown();
-            }
+            hasShownModalRef.current = true;
+            sessionStorage.setItem('hasShownModal', 'true');
           }}
         />
       )}
