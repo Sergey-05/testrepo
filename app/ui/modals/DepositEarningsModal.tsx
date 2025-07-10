@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { Drawer } from 'vaul';
 import useGlobalStore from '@/app/store/useGlobalStore';
 import { useNotification } from '@/app/context/NotificContext';
-import { saveAccum, updateAccum } from '@/app/lib/actions';
+import { saveAccum } from '@/app/lib/actions';
 import { DepositEarning } from '@/app/lib/definition';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -15,7 +15,6 @@ export default function DepositEarningsModal() {
   const { user, depositEarnings, setUser, setDepositEarnings } =
     useGlobalStore();
   const { showNotification } = useNotification();
-  const [isCollecting, setIsCollecting] = useState(false);
 
   // Найти текущий тариф
   const currentTariff = useMemo(() => {
