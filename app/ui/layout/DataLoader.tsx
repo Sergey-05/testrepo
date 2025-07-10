@@ -378,7 +378,7 @@ export default function DataLoader() {
 
   return (
     <>
-      {!hasShownModal && canShowModal && (
+      {canShowModal && (
         <DepositEarningsModal onFinish={() => setHasShownModal(true)} />
       )}
     </>
