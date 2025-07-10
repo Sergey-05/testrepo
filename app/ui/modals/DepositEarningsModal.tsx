@@ -85,7 +85,6 @@ export default function DepositEarningsModal({
         // Если накопления уже есть, показываем модальное окно
         if (hasUncollectedEarnings && accumulation > 0) {
           setIsOpen(true);
-          onFinish(); // флаг ставим только если модалка реально будет показана
           return;
         }
 
@@ -96,7 +95,6 @@ export default function DepositEarningsModal({
           setUser(updatedData.user);
           setDepositEarnings(updatedData.depositEarnings);
           setIsOpen(true);
-          onFinish(); // также вызываем
         } else {
           setIsOpen(false);
         }
