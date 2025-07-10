@@ -202,7 +202,13 @@ export default function DataLoader() {
   const [progress, setProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [webAppReady, setWebAppReady] = useState(false);
-  const [hasShownModal, setHasShownModal] = useState(false);
+  const [hasShownModal, setHasShownModal] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('hasShownModal') === 'true';
+    }
+    return false;
+  });
+
   const [canShowModal, setCanShowModal] = useState(false);
 
   const { showNotification } = useNotification();
@@ -375,11 +381,15 @@ export default function DataLoader() {
   if (!isDataLoaded) {
     return <LoadingScreen progress={progress} isVisible={isVisible} />;
   }
+  const handleModalShown = () => {
+    setHasShownModal(true);
+    sessionStorage.setItem('hasShownModal', 'true');
+  };
 
   return (
     <>
-      {canShowModal && (
-        <DepositEarningsModal onFinish={() => setHasShownModal(true)} />
+      {canShowModal && !hasShownModal && (
+        <DepositEarningsModal onFinish={handleModalShown} />
       )}
     </>
   );
