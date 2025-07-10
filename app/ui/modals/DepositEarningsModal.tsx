@@ -7,7 +7,6 @@ import { useNotification } from '@/app/context/NotificContext';
 import { saveAccum } from '@/app/lib/actions';
 import { DepositEarning } from '@/app/lib/definition';
 import Link from 'next/link';
-import Image from 'next/image';
 import { tariffs } from '@/app/lib/constants/tariffs';
 
 export default function DepositEarningsModal({
