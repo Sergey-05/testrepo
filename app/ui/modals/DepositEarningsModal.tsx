@@ -115,8 +115,9 @@ export default function DepositEarningsModal() {
   return (
     <Drawer.Root open={isOpen} onOpenChange={setIsOpen}>
       <Drawer.Portal>
-        <Drawer.Overlay className='fixed inset-0 bg-black/40' />
-        <Drawer.Content className='fixed bottom-0 left-0 right-0 h-[50vh] rounded-t-xl bg-gradient-to-br from-black to-[#1e0631] text-white'>
+        <Drawer.Overlay className='fixed inset-0 z-[100] w-full bg-black/40 backdrop-blur-sm' />
+
+        <Drawer.Content className='fixed inset-x-0 bottom-0 z-[110] flex h-[60vh] w-full rounded-t-2xl border border-zinc-700 bg-gradient-to-br from-black to-[#1e0631] text-white outline-none'>
           <div className='flex h-full flex-col p-4'>
             <div className='flex justify-end'>
               <button
