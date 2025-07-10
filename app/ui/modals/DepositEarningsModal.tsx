@@ -16,9 +16,17 @@ export default function DepositEarningsModal({
   onFinish: () => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [wasOpenedOnce, setWasOpenedOnce] = useState(false);
   const { user, depositEarnings, setUser, setDepositEarnings } =
     useGlobalStore();
   const { showNotification } = useNotification();
+
+  useEffect(() => {
+    if (isOpen && !wasOpenedOnce) {
+      setWasOpenedOnce(true);
+      onFinish();
+    }
+  }, [isOpen, wasOpenedOnce, onFinish]);
 
   // Найти текущий тариф
   const currentTariff = useMemo(() => {
@@ -138,23 +146,6 @@ export default function DepositEarningsModal({
                 className='rounded-full'
               />
             </div>
-
-            {/* <div className='absolute -top-14 z-20 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-tr from-purple-600 via-fuchsia-500 to-yellow-400 shadow-xl'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                className='h-12 w-12 text-white'
-                fill='none'
-                viewBox='0 0 24 24'
-                stroke='currentColor'
-                strokeWidth='1.5'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M12 8c.7 0 1.4.3 1.9.8s.8 1.2.8 1.9-.3 1.4-.8 1.9-1.2.8-1.9.8-1.4-.3-1.9-.8-.8-1.2-.8-1.9.3-1.4.8-1.9.9-.8 1.9-.8zm0 0V4m0 16v-4m8-4h-4m-8 0H4'
-                />
-              </svg>
-            </div> */}
 
             <button
               type='button'

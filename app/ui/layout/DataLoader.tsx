@@ -389,8 +389,14 @@ export default function DataLoader() {
 
   return (
     <>
-      {canShowModal && !hasShownModal && (
-        <DepositEarningsModal onFinish={handleModalShown} />
+      {canShowModal && (
+        <DepositEarningsModal
+          onFinish={() => {
+            if (!hasShownModal) {
+              handleModalShown();
+            }
+          }}
+        />
       )}
     </>
   );
