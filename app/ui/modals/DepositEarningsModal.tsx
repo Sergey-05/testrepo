@@ -119,7 +119,15 @@ export default function DepositEarningsModal({
   ]);
 
   return (
-    <Drawer.Root open={isOpen} onOpenChange={setIsOpen}>
+    <Drawer.Root
+      open={isOpen}
+      onOpenChange={(value) => {
+        setIsOpen(value);
+        if (value) {
+          onFinish(); // гарантированно вызываем, когда окно ОТКРЫЛОСЬ
+        }
+      }}
+    >
       <Drawer.Portal>
         <Drawer.Overlay className='fixed inset-0 z-[100] bg-black/40 backdrop-blur-sm' />
 
