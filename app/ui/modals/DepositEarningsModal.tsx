@@ -131,7 +131,7 @@ export default function DepositEarningsModal({
 
         <Drawer.Content className='fixed inset-x-0 bottom-0 z-[110] flex w-full flex-col items-center rounded-t-3xl bg-[radial-gradient(circle_at_top,black_0%,#1e0631_40%)] text-white outline-none'>
           <div className='relative flex h-full w-full flex-col items-center px-4 pt-20'>
-            <div className='absolute -top-12 z-20 rounded-full border-4 border-[#1e0631] bg-[#0d0d0d] p-2 shadow-xl'>
+            {/* <div className='absolute -top-12 z-20 rounded-full border-4 border-[#1e0631] bg-[#0d0d0d] p-2 shadow-xl'>
               <Image
                 src='/coin-BqBBbrtn.webp'
                 alt='Coin'
@@ -139,6 +139,23 @@ export default function DepositEarningsModal({
                 height={96}
                 className='rounded-full'
               />
+            </div> */}
+
+            <div className='absolute -top-14 z-20 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-tr from-purple-600 via-fuchsia-500 to-yellow-400 shadow-xl'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                className='h-12 w-12 text-white'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke='currentColor'
+                strokeWidth='1.5'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M12 8c.7 0 1.4.3 1.9.8s.8 1.2.8 1.9-.3 1.4-.8 1.9-1.2.8-1.9.8-1.4-.3-1.9-.8-.8-1.2-.8-1.9.3-1.4.8-1.9.9-.8 1.9-.8zm0 0V4m0 16v-4m8-4h-4m-8 0H4'
+                />
+              </svg>
             </div>
 
             <button
@@ -164,13 +181,17 @@ export default function DepositEarningsModal({
 
             <div className='mt-4 text-center'>
               <p className='flex items-center justify-center gap-2 text-xl font-bold text-white drop-shadow'>
-                Ты заработал
-                <Image src='/Coin.webp' alt='Coin' width={24} height={24} />
-                {accumulation.toLocaleString('ru-RU', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}{' '}
-                ₽!
+                <p className='mb-2 text-xl font-bold text-white drop-shadow'>
+                  Ты заработал
+                </p>
+
+                <p className='flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-300 via-orange-400 to-purple-500 bg-clip-text text-xl font-bold text-transparent drop-shadow'>
+                  {accumulation.toLocaleString('ru-RU', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}{' '}
+                  ₽
+                </p>
               </p>
               <p className='mt-2 text-sm font-medium text-purple-300'>
                 от Вклада
