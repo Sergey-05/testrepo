@@ -114,35 +114,6 @@ export default function DepositEarningsModal() {
     showNotification,
   ]);
 
-  // Обработчик сбора накоплений
-  const handleCollect = async () => {
-    if (!user || accumulation <= 0 || isCollecting) {
-      showNotification(
-        'Сбор накоплений невозможен',
-        'info',
-        'Проверьте условия сбора накоплений',
-      );
-      return;
-    }
-
-    setIsCollecting(true);
-    try {
-      const { user: updatedUser, depositEarnings } = await updateAccum(
-        user.telegram_id,
-        accumulation,
-      );
-      setUser(updatedUser);
-      setDepositEarnings(depositEarnings);
-      showNotification('Накопления успешно собраны', 'success');
-      setIsOpen(false);
-    } catch (error) {
-      console.error('Ошибка при сборе накоплений:', error);
-      showNotification('Ошибка при сборе накоплений', 'error');
-    } finally {
-      setIsCollecting(false);
-    }
-  };
-
   return (
     <Drawer.Root open={isOpen} onOpenChange={setIsOpen}>
       <Drawer.Portal>
@@ -174,7 +145,7 @@ export default function DepositEarningsModal() {
             <div className='flex flex-1 flex-col items-center justify-center'>
               <div className='mb-4'>
                 <Image
-                  src='/assets/coin-BqBBbrtn.webp'
+                  src='/coin-BqBBbrtn.webp'
                   alt='Coin'
                   width={64}
                   height={64}
@@ -183,12 +154,7 @@ export default function DepositEarningsModal() {
               <div className='mb-4 text-center'>
                 <p className='flex items-center justify-center gap-3 text-lg font-semibold'>
                   Ты заработал
-                  <Image
-                    src='/images/common/Coin.webp'
-                    alt='Coin'
-                    width={24}
-                    height={24}
-                  />
+                  <Image src='/Coin.webp' alt='Coin' width={24} height={24} />
                   {accumulation.toLocaleString('ru-RU', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
@@ -226,24 +192,9 @@ export default function DepositEarningsModal() {
               <div className='w-full'>
                 <Link
                   href='/cabinet'
-                  onClick={handleCollect}
                   className='relative w-full overflow-hidden rounded-xl border border-[#7c3aed] px-3 py-2 text-center text-sm font-semibold text-[#c4b5fd] transition-all duration-300 active:text-white disabled:cursor-not-allowed disabled:opacity-50'
                 >
                   <span className='flex items-center justify-center gap-1'>
-                    {isCollecting ? (
-                      <svg
-                        width='16'
-                        height='16'
-                        viewBox='0 0 17 16'
-                        fill='none'
-                        className='mr-2 h-4 w-4 animate-spin text-white'
-                      >
-                        <path
-                          d='M8.5 0C10.0823 1.88681e-08 11.617 0.469192 12.9446 1.34824C14.2602 2.22728 15.2855 3.47672 15.891 4.93853C16.4965 6.40034 16.655 8.00887 16.3463 9.56072C16.0376 11.1126 15.2757 12.538 14.1569 13.6569C13.038 14.7757 11.6126 15.5376 10.0607 15.8463C8.50887 16.155 6.90034 15.9965 5.43853 15.391C3.97672 14.7855 2.72729 13.7602 1.84824 12.4446C0.969192 11.129 0.5 9.58225 0.5 8H2.5C2.5 9.18669 2.85189 10.3467 3.51118 11.3334C4.17047 12.3201 5.10754 13.0892 6.2039 13.5433C7.30026 13.9974 8.50666 14.1162 9.67054 13.8847C10.8344 13.6532 11.9035 13.0818 12.7426 12.2426C13.5818 11.4035 14.1532 10.3344 14.3847 9.17054C14.6162 8.00666 14.4974 6.80026 14.0433 5.7039C13.5892 4.60754 12.8201 3.67047 11.8334 3.01118C10.8467 2.35189 9.68669 2 8.5 2V0Z'
-                          fill='currentColor'
-                        />
-                      </svg>
-                    ) : null}
                     <span className='truncate'>Собрать</span>
                   </span>
                 </Link>
