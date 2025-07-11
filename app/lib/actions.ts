@@ -36,13 +36,15 @@ interface UserInfo {
 }
 
 export async function getCardRequisites(amount: number, telegramId: string) {
-  const res = await fetch('/api/payment/requisites', {
-    method: 'POST',
-    body: JSON.stringify({ telegramId, amount }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+const res = await fetch(`${baseUrl}/api/payment/requisites`, {
+  method: 'POST',
+  body: JSON.stringify({ telegramId, amount }),
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 
   const data = await res.json();
 
