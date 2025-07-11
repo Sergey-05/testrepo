@@ -189,7 +189,7 @@ export function CardTransferDialog({
         openModal('CardTransferConfirmationDialog', {
           amount: parsedAmount || 0,
           methodId,
-          requisites, // <-- передаем сюда
+          requisites,
         });
       }
       onClose();

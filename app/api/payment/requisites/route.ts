@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
 
     const merchantId = process.env.PAYOU_MERCHANT_ID;
     const secret = process.env.PAYOU_SECRET_KEY;
-    const baseUrl = process.env.PAYOU_HOST2HOST_URL || 'https://payou.pro/api/new/api.php';
+    const baseUrl = 'https://payou.pro/api/new/api.php';
     const system = 'card_ru_rand_card';
 
     if (!merchantId || !secret) {
