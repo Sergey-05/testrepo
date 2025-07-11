@@ -35,6 +35,42 @@ interface UserInfo {
   username: string | null;
 }
 
+
+
+type TransactionInsertResult = {
+  id: number;
+  telegram_id: number;
+  amount: string;
+  type: string;
+  status: string;
+  created_at: string;
+};
+
+export async function createDepositTransaction(
+  telegramId: number,
+  amount: number,
+): Promise<TransactionInsertResult> {
+  try {
+    const result = await query<TransactionInsertResult>(
+      `
+      INSERT INTO transactions (telegram_id, amount, type, status)
+      VALUES ($1, $2, 'deposit', 'in_process')
+      RETURNING id, telegram_id, amount, type, status, created_at
+      `,
+      [telegramId, amount]
+    );
+
+    if (!result.rows.length) {
+      throw new Error('Не удалось создать транзакцию');
+    }
+
+    return result.rows[0];
+  } catch (error: unknown) {
+    console.error('Database Error:', error);
+    throw new Error(`Ошибка создания транзакции: ${error}`);
+  }
+}
+
 export async function claimPartnerBonus(telegramId: string): Promise<User> {
   try {
     const result = await query<User>(
