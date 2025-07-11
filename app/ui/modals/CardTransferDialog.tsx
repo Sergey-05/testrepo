@@ -485,8 +485,6 @@ export function CardTransferDialog({
   const amountOptions = [
     3030, 4040, 5050, 8080, 10010, 25025, 40400, 70777, 100100,
   ];
-  const [randomAdd, setRandomAdd] = useState(0);
-  const [adjustedAmount, setAdjustedAmount] = useState(0);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -497,14 +495,6 @@ export function CardTransferDialog({
   const { openModal } = useModal();
 
   const { showNotification } = useNotification();
-
-  useEffect(() => {
-    if (isOpen) {
-      const newRandomAdd = Math.floor(Math.random() * 15) + 1;
-      setRandomAdd(newRandomAdd);
-      setAdjustedAmount(Number(amount + randomAdd));
-    }
-  }, [isOpen, amount]);
 
   // const hasFetchedData = useRef<boolean>(false);
 
@@ -631,7 +621,7 @@ export function CardTransferDialog({
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             telegramId: user.telegram_id,
-            amount: adjustedAmount,
+            amount: parsedAmount,
           }),
         });
 
