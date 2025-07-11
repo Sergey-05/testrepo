@@ -18,7 +18,6 @@ type CardTransferConfirmationDialogProps = {
     card: string;
     bank: string;
     holder: string;
-    [key: string]: any;
   };
 };
 
