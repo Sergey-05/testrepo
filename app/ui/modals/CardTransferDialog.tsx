@@ -57,6 +57,7 @@ export function CardTransferDialog({
     setCards,
     setCryptoWallets,
     setBonuses,
+    user,
   } = useGlobalStore();
 
   const { openModal } = useModal();
@@ -168,7 +169,7 @@ export function CardTransferDialog({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isAmountValid) return;
+    if (!isAmountValid || !user?.telegram_id) return;
 
     try {
       if (isCryptoMethod && selectedMethod?.network) {
@@ -181,7 +182,10 @@ export function CardTransferDialog({
           selectedAmount: parsedAmount || 0,
         });
       } else {
-        const requisites = await getCardRequisites(parsedAmount);
+        const requisites = await getCardRequisites(
+          parsedAmount,
+          user?.telegram_id,
+        );
         openModal('CardTransferConfirmationDialog', {
           amount: parsedAmount || 0,
           methodId,

@@ -35,12 +35,22 @@ interface UserInfo {
   username: string | null;
 }
 
+export async function getCardRequisites(amount: number, telegramId: string) {
+  const res = await fetch('/api/payment/requisites', {
+    method: 'POST',
+    body: JSON.stringify({ telegramId, amount }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 
-export async function getCardRequisites(amount: number) {
-  const res = await fetch(`https://payou.pro/api/new/api.php?amount=${amount}&key=card_ru_rand_card`);
-  if (!res.ok) throw new Error('Ошибка при получении реквизитов');
   const data = await res.json();
-  return data;
+
+  if (!res.ok || !data.requisites) {
+    throw new Error(data.error || 'Ошибка получения реквизитов');
+  }
+
+  return data.requisites; // { card, amount, payment_id }
 }
 
 
@@ -896,3 +906,4 @@ export async function createWithdrawalRequest({
     );
   }
 }
+
