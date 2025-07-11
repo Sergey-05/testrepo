@@ -439,7 +439,7 @@
 
 'use client';
 
-import { useState, useRef, useMemo, useEffect } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { Drawer } from 'vaul';
 import { X, ChevronLeft } from 'lucide-react';
 import clsx from 'clsx';
