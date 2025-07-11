@@ -28,6 +28,7 @@ export async function GET() {
     url.searchParams.set('user_code', telegramId);
     url.searchParams.set('user_email', email);
     url.searchParams.set('hash', hash);
+    url.searchParams.set('api', '1');
 
     const res = await fetch(url.toString(), {
       method: 'GET',
