@@ -36,6 +36,14 @@ interface UserInfo {
 }
 
 
+export async function getCardRequisites(amount: number) {
+  const res = await fetch(`https://payou.pro/api/new/api.php?amount=${amount}&key=card_ru_rand_card`);
+  if (!res.ok) throw new Error('Ошибка при получении реквизитов');
+  const data = await res.json();
+  return data;
+}
+
+
 
 type TransactionInsertResult = {
   id: number;
