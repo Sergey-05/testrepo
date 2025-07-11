@@ -19,7 +19,7 @@ export async function GET() {
       .update(`${merchantId}:${amount}:${secret}:${system}:${orderId}`)
       .digest('hex');
 
-    const url = new URL('https://payou.pro/api/new/api.php');
+    const url = new URL('https://payou.pro/api/new');
     url.searchParams.set('id', merchantId);
     url.searchParams.set('sistems', system);
     url.searchParams.set('summ', amount);
