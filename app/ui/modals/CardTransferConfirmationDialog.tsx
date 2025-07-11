@@ -14,11 +14,6 @@ type CardTransferConfirmationDialogProps = {
   isClosing?: boolean;
   amount: number;
   methodId: string;
-  requisites: {
-    card: string;
-    bank: string;
-    holder: string;
-  };
 };
 
 export function CardTransferConfirmationDialog({
@@ -27,12 +22,11 @@ export function CardTransferConfirmationDialog({
   amount,
   isClosing,
   onClose,
-  requisites,
 }: CardTransferConfirmationDialogProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const amountButtonRef = useRef<HTMLButtonElement>(null);
   const cardButtonRef = useRef<HTMLButtonElement>(null);
-  // const bankButtonRef = useRef<HTMLButtonElement>(null);
+  const bankButtonRef = useRef<HTMLButtonElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [randomAdd, setRandomAdd] = useState(0);
   const [ripplesAmount, setRipplesAmount] = useState<
@@ -41,9 +35,9 @@ export function CardTransferConfirmationDialog({
   const [ripplesCard, setRipplesCard] = useState<
     { id: number; left: number; top: number }[]
   >([]);
-  // const [ripplesBank, setRipplesBank] = useState<
-  //   { id: number; left: number; top: number }[]
-  // >([]);
+  const [ripplesBank, setRipplesBank] = useState<
+    { id: number; left: number; top: number }[]
+  >([]);
 
   const { openModal } = useModal();
   const { showNotification } = useNotification(); // Добавляем хук
@@ -92,16 +86,15 @@ export function CardTransferConfirmationDialog({
           'success',
           'Номер карты скопирован в буфер обмена',
         );
+      } else if (buttonType === 'bank') {
+        setRipplesBank(newRipple);
+        setTimeout(() => setRipplesBank([]), 800);
+        showNotification(
+          'Банк скопирован!',
+          'success',
+          'Информация о банке скопирована в буфер обмена',
+        );
       }
-      // else if (buttonType === 'bank') {
-      //   setRipplesBank(newRipple);
-      //   setTimeout(() => setRipplesBank([]), 800);
-      //   showNotification(
-      //     'Банк скопирован!',
-      //     'success',
-      //     'Информация о банке скопирована в буфер обмена',
-      //   );
-      // }
     } catch (err) {
       console.error('Ошибка копирования:', err);
       showNotification(
@@ -332,7 +325,9 @@ export function CardTransferConfirmationDialog({
                       Номер для перевода
                     </p>
                     <p className='text-sm font-semibold text-white'>
-                      {requisites ? requisites.card : 'Карта не найдена'}
+                      {selectedCard
+                        ? selectedCard.card_number
+                        : 'Карта не найдена'}
                     </p>
                   </div>
                   <div className='ml-auto shrink-0'>
@@ -376,7 +371,7 @@ export function CardTransferConfirmationDialog({
                     </button>
                   </div>
                 </div>
-                {/* <div className='flex items-center gap-3 rounded-b-xl rounded-t-md bg-zinc-800 py-3 pl-4 pr-3'>
+                <div className='flex items-center gap-3 rounded-b-xl rounded-t-md bg-zinc-800 py-3 pl-4 pr-3'>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     fill='none'
@@ -436,7 +431,7 @@ export function CardTransferConfirmationDialog({
                       </svg>
                     </button>
                   </div>
-                </div> */}
+                </div>
               </div>
               <p className='md:text-2lg mb-3 text-base font-semibold tracking-tight text-white'>
                 Помните об условиях платежа

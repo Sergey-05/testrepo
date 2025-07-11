@@ -10,7 +10,6 @@ import { useModal } from '@/app/context/ModalContext';
 import useGlobalStore from '@/app/store/useGlobalStore';
 import { useNotification } from '@/app/context/NotificContext';
 import { fetchPaymentData } from '@/app/lib/dataQuery';
-import { getCardRequisites } from '@/app/lib/actions';
 
 type CardTransferDialogProps = {
   isOpen: boolean;
@@ -57,7 +56,6 @@ export function CardTransferDialog({
     setCards,
     setCryptoWallets,
     setBonuses,
-    user,
   } = useGlobalStore();
 
   const { openModal } = useModal();
@@ -145,33 +143,9 @@ export function CardTransferDialog({
     }
   };
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (isAmountValid) {
-  //     if (isCryptoMethod && selectedMethod?.network) {
-  //       openModal('CryptoPaymentDialog', {
-  //         method: {
-  //           id: selectedMethod.id,
-  //           title: selectedMethod.title,
-  //           network: selectedMethod.network,
-  //         },
-  //         selectedAmount: parsedAmount || 0,
-  //       });
-  //     } else {
-  //       openModal('CardTransferConfirmationDialog', {
-  //         amount: parsedAmount || 0,
-  //         methodId,
-  //       });
-  //     }
-  //     onClose();
-  //   }
-  // };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isAmountValid || !user?.telegram_id) return;
-
-    try {
+    if (isAmountValid) {
       if (isCryptoMethod && selectedMethod?.network) {
         openModal('CryptoPaymentDialog', {
           method: {
@@ -182,24 +156,12 @@ export function CardTransferDialog({
           selectedAmount: parsedAmount || 0,
         });
       } else {
-        const requisites = await getCardRequisites(
-          parsedAmount,
-          user?.telegram_id,
-        );
         openModal('CardTransferConfirmationDialog', {
           amount: parsedAmount || 0,
           methodId,
-          requisites,
         });
       }
       onClose();
-    } catch (error) {
-      showNotification(
-        'Ошибка получения реквизитов',
-        'error',
-        'Попробуйте позже',
-      );
-      console.error(error);
     }
   };
 

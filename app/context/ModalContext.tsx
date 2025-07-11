@@ -39,11 +39,6 @@ export interface ModalProps {
   CardTransferConfirmationDialog: {
     amount: number;
     methodId: string;
-    requisites: {
-      card: string;
-      bank: string;
-      holder: string;
-    };
   };
 }
 
