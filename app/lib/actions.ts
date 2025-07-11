@@ -1,5 +1,6 @@
 'use server';
 
+import { url } from 'inspector';
 import { query } from './db';
 import { User, DepositEarning } from './definition';
 import { sendTelegramMessage } from './utils.ts/telegram';
@@ -70,6 +71,109 @@ export async function createDepositTransaction(
     throw new Error(`Ошибка создания транзакции: ${error}`);
   }
 }
+
+
+export async function approveDepositFromWebhook(transactionId: number) {
+  const sql = `
+    WITH updated_transaction AS (
+        UPDATE transactions
+        SET status = 'approved', review_time = NOW()
+        WHERE id = $1 AND type = 'deposit' AND status = 'in_process'
+        RETURNING telegram_id, amount
+    ),
+    calculate_bonus AS (
+        SELECT 
+            ut.telegram_id,
+            ut.amount AS transaction_amount,
+            COALESCE(
+                (SELECT b.percentage 
+                 FROM bonuses b
+                 WHERE b.min_deposit <= ut.amount 
+                   AND (b.max_deposit IS NULL OR b.max_deposit >= ut.amount)
+                 ORDER BY b.percentage DESC
+                 LIMIT 1), 0
+            ) AS bonus_percentage
+        FROM updated_transaction ut
+    ),
+    update_user AS (
+        UPDATE users u
+        SET 
+            deposit_amount = u.deposit_amount + cb.transaction_amount + (cb.transaction_amount * (cb.bonus_percentage / 100)),
+            last_deposit_at = CASE
+                WHEN u.last_deposit_at IS NULL THEN NOW()
+                WHEN NOW() - u.last_deposit_at < INTERVAL '24 hours' THEN NOW()
+                ELSE u.last_deposit_at
+            END
+        FROM calculate_bonus cb
+        WHERE u.telegram_id = cb.telegram_id
+        RETURNING u.telegram_id, u.referred_by
+    ),
+    insert_partner_earning AS (
+        INSERT INTO partner_earnings (telegram_id, partner_telegram_id, amount, created_at, transaction_id)
+        SELECT 
+            u.referred_by,
+            cb.telegram_id,
+            (cb.transaction_amount * 0.12),
+            NOW(),
+            $1
+        FROM calculate_bonus cb
+        JOIN update_user u ON u.telegram_id = cb.telegram_id
+        WHERE u.referred_by IS NOT NULL
+    ),
+    update_referral AS (
+        UPDATE users ref
+        SET 
+            balance = ref.balance + (cb.transaction_amount * 0.12),
+            total_profit = ref.total_profit + (cb.transaction_amount * 0.12)
+        FROM calculate_bonus cb
+        JOIN update_user u ON u.telegram_id = cb.telegram_id
+        WHERE ref.telegram_id = u.referred_by
+    )
+    SELECT 
+        ut.telegram_id,
+        cb.transaction_amount,
+        cb.bonus_percentage
+    FROM updated_transaction ut
+    JOIN calculate_bonus cb ON cb.telegram_id = ut.telegram_id;
+  `;
+
+  try {
+    const { rows } = await query<{
+      telegram_id: number;
+      transaction_amount: number;
+      bonus_percentage: number;
+    }>(sql, [transactionId]);
+
+    if (!rows.length) {
+      throw new Error('Транзакция не найдена или уже подтверждена');
+    }
+
+    const { telegram_id, transaction_amount, bonus_percentage } = rows[0];
+    const bonus_amount = (transaction_amount * bonus_percentage) / 100;
+
+    let message = `<b>💸 Ваш вклад на сумму ${transaction_amount.toFixed(2)}₽ успешно одобрен!</b>`;
+    if (bonus_amount > 0) {
+      message += `\n\n🎁 Начислен бонус - <b>${bonus_amount.toFixed(2)}₽</b>`;
+    }
+    message += `\n\n🤝 Будем благодарны, если отправите в форум скриншот чека, заранее благодарим 🤝`;
+
+    const inlineKeyboard = [
+      [
+        { text: 'Перейти в форум', url: 'https://t.me/+k3i949IXwL8zN2My' },
+      ],
+    ];
+
+    await sendTelegramMessage(telegram_id, message, inlineKeyboard);
+  } catch (error) {
+    console.error('Ошибка при подтверждении депозита:', error);
+
+    // Удаляем транзакцию, если подтверждение не удалось
+    await query('DELETE FROM transactions WHERE id = $1', [transactionId]);
+    throw error;
+  }
+}
+
+
 
 export async function claimPartnerBonus(telegramId: string): Promise<User> {
   try {
