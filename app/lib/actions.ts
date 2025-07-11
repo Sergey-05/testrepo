@@ -1,6 +1,5 @@
 'use server';
 
-import { url } from 'inspector';
 import { query } from './db';
 import { User, DepositEarning } from './definition';
 import { sendTelegramMessage } from './utils.ts/telegram';
