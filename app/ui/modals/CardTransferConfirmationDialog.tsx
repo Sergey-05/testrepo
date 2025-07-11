@@ -33,7 +33,7 @@ export function CardTransferConfirmationDialog({
   const dialogRef = useRef<HTMLDivElement>(null);
   const amountButtonRef = useRef<HTMLButtonElement>(null);
   const cardButtonRef = useRef<HTMLButtonElement>(null);
-  const bankButtonRef = useRef<HTMLButtonElement>(null);
+  // const bankButtonRef = useRef<HTMLButtonElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [randomAdd, setRandomAdd] = useState(0);
   const [ripplesAmount, setRipplesAmount] = useState<
@@ -42,9 +42,9 @@ export function CardTransferConfirmationDialog({
   const [ripplesCard, setRipplesCard] = useState<
     { id: number; left: number; top: number }[]
   >([]);
-  const [ripplesBank, setRipplesBank] = useState<
-    { id: number; left: number; top: number }[]
-  >([]);
+  // const [ripplesBank, setRipplesBank] = useState<
+  //   { id: number; left: number; top: number }[]
+  // >([]);
 
   const { openModal } = useModal();
   const { showNotification } = useNotification(); // Добавляем хук
@@ -93,15 +93,16 @@ export function CardTransferConfirmationDialog({
           'success',
           'Номер карты скопирован в буфер обмена',
         );
-      } else if (buttonType === 'bank') {
-        setRipplesBank(newRipple);
-        setTimeout(() => setRipplesBank([]), 800);
-        showNotification(
-          'Банк скопирован!',
-          'success',
-          'Информация о банке скопирована в буфер обмена',
-        );
       }
+      // else if (buttonType === 'bank') {
+      //   setRipplesBank(newRipple);
+      //   setTimeout(() => setRipplesBank([]), 800);
+      //   showNotification(
+      //     'Банк скопирован!',
+      //     'success',
+      //     'Информация о банке скопирована в буфер обмена',
+      //   );
+      // }
     } catch (err) {
       console.error('Ошибка копирования:', err);
       showNotification(

@@ -43,7 +43,6 @@ export interface ModalProps {
       card: string;
       bank: string;
       holder: string;
-      [key: string]: any;
     };
   };
 }
