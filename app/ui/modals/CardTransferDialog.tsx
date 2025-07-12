@@ -49,6 +49,7 @@ export function CardTransferDialog({
   ];
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const WebApp = useWebApp();
 
   const {
@@ -146,68 +147,84 @@ export function CardTransferDialog({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (isAmountValid) {
+  //     if (isCryptoMethod && selectedMethod?.network) {
+  //       openModal('CryptoPaymentDialog', {
+  //         method: {
+  //           id: selectedMethod.id,
+  //           title: selectedMethod.title,
+  //           network: selectedMethod.network,
+  //         },
+  //         selectedAmount: parsedAmount || 0,
+  //       });
+  //     } else {
+  //       openModal('CardTransferConfirmationDialog', {
+  //         amount: parsedAmount || 0,
+  //         methodId,
+  //       });
+  //     }
+  //     onClose();
+  //   }
+  // };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isAmountValid) {
-      // if (isCryptoMethod && selectedMethod?.network) {
-      //   openModal('CryptoPaymentDialog', {
-      //     method: {
-      //       id: selectedMethod.id,
-      //       title: selectedMethod.title,
-      //       network: selectedMethod.network,
-      //     },
-      //     selectedAmount: parsedAmount || 0,
-      //   });
-      // } else {
-      //   openModal('CardTransferConfirmationDialog', {
-      //     amount: parsedAmount || 0,
-      //     methodId,
-      //   });
-      // }
-      // onClose();
 
-      const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    if (!isAmountValid || !user?.telegram_id) return;
 
-        if (!isAmountValid || !user?.telegram_id) return;
+    if (isCryptoMethod && selectedMethod?.network) {
+      try {
+        const res = await fetch('/api/create-payou-url-new', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            telegramId: user.telegram_id,
+            amount: parsedAmount,
+          }),
+        });
 
-        if (isCryptoMethod && selectedMethod?.network) {
-          openModal('CryptoPaymentDialog', {
-            method: {
-              id: selectedMethod.id,
-              title: selectedMethod.title,
-              network: selectedMethod.network,
-            },
-            selectedAmount: parsedAmount || 0,
-          });
-        } else {
-          try {
-            const res = await fetch('/api/create-payou-url', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                telegramId: user.telegram_id,
-                amount: parsedAmount,
-              }),
-            });
+        const data = await res.json();
 
-            const data = await res.json();
-
-            if (!res.ok || !data.url) {
-              throw new Error(data.error || 'Не удалось получить ссылку');
-            }
-            if (WebApp) {
-              WebApp.openLink(data.url);
-            }
-          } catch (error) {
-            console.error('Ошибка оплаты:', error);
-            showNotification('Ошибка', 'error', 'Не удалось начать оплату');
-          }
+        if (!res.ok || !data.url) {
+          throw new Error(data.error || 'Не удалось получить ссылку');
         }
 
-        onClose();
-      };
+        if (WebApp) {
+          WebApp.openLink(data.url);
+        }
+      } catch (error) {
+        console.error('Ошибка оплаты:', error);
+        showNotification('Ошибка', 'error', 'Не удалось начать оплату');
+      }
+    } else {
+      try {
+        const res = await fetch('/api/create-payou-url', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            telegramId: user.telegram_id,
+            amount: parsedAmount,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data.url) {
+          throw new Error(data.error || 'Не удалось получить ссылку');
+        }
+
+        if (WebApp) {
+          WebApp.openLink(data.url);
+        }
+      } catch (error) {
+        console.error('Ошибка оплаты:', error);
+        showNotification('Ошибка', 'error', 'Не удалось начать оплату');
+      }
     }
+
+    onClose();
   };
 
   // Найти метод по methodId
