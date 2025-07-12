@@ -23,7 +23,7 @@ export async function GET(request: Request) {
       .digest('hex');
 
     // Формирование URL
-    const url = new URL('https://payou.pro/api/new/api.php');
+    const url = new URL('https://payou.pro/sci/v1/');
     url.searchParams.set('id', merchantId);
     url.searchParams.set('sistems', system);
     url.searchParams.set('summ', amount);
