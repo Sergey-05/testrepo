@@ -12,22 +12,31 @@ export async function POST(req: NextRequest) {
 
     const transaction = await createDepositTransaction(telegramId, amount);
 
-    const merchantId = process.env.PAYOU_MERCHANT_ID!;
-    const secret = process.env.PAYOU_SECRET_KEY!;
+    const merchantId = process.env.PAYOU_MERCHANT_ID;
+    const secret = process.env.PAYOU_SECRET_KEY;
+    const baseUrl = process.env.PAYOU_BASE_URL;
+
+    if (!merchantId || !secret || !baseUrl) {
+      return NextResponse.json({ error: 'PAYOU переменные среды не заданы' }, { status: 500 });
+    }
+
     const system = 'card_ru_rand_card';
+    const formattedAmount = Number(amount).toFixed(2);
+    const orderId = transaction.id.toString();
 
     const hash = crypto
       .createHash('md5')
-      .update(`${merchantId}:${amount}:${secret}:${system}:${transaction.id}`)
+      .update(`${merchantId}:${formattedAmount}:${secret}:${system}:${orderId}`)
       .digest('hex');
 
-    const url = new URL(process.env.PAYOU_BASE_URL!);
+    const url = new URL(baseUrl);
     url.searchParams.set('id', merchantId);
     url.searchParams.set('sistems', system);
-    url.searchParams.set('summ', amount.toFixed(2));
-    url.searchParams.set('order_id', transaction.id.toString());
+    url.searchParams.set('summ', formattedAmount);
+    url.searchParams.set('order_id', orderId);
     url.searchParams.set('hash', hash);
     url.searchParams.set('user_code', telegramId.toString());
+    url.searchParams.set('user_email', 'no@email.com');
 
     return NextResponse.json({ url: url.toString() });
   } catch (err) {
