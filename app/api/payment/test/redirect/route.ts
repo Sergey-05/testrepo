@@ -9,7 +9,7 @@ export async function GET(request: Request) {
 
     // Данные из переменных окружения и параметров
     const merchantId = process.env.PAYOU_MERCHANT_ID || '582';
-    const secret = process.env.PAYOU_SECRET;
+    const secret = process.env.PAYOU_SECRET || 'e9ed3b532d2bd8112a22a3b2cc077556';
     const system = 'MoneyRUB_Cra_qr';
     const amount = '100.00';
     const telegramId = '5707577690';
@@ -32,40 +32,11 @@ export async function GET(request: Request) {
     url.searchParams.set('user_code', telegramId);
     url.searchParams.set('user_email', email);
     url.searchParams.set('hash', hash);
-    url.searchParams.set('api', '1');
 
-    // Выполнение запроса
-    const res = await fetch(url.toString(), {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-      },
-    });
-
-    // Проверка HTTP-статуса
-    if (!res.ok) {
-      return NextResponse.json(
-        { error: `Ошибка API Payou: ${res.status} ${res.statusText}` },
-        { status: res.status }
-      );
-    }
-
-    // Парсинг ответа
-    const data = await res.json();
-
-    // Проверка статуса ответа
-    if (data.status !== 'success') {
-      console.error('[Payou Test API Error] Неуспешный статус:', data);
-      return NextResponse.json(
-        { error: 'Ошибка Payou API', details: data },
-        { status: 400 }
-      );
-    }
-
-    // Возврат реквизитов
-    return NextResponse.json({ requisites: data.data });
+    // Редирект на URL Payou
+    return NextResponse.redirect(url.toString());
   } catch (err) {
-    console.error('[Payou Test API Error]', err);
+    console.error('[Payou Redirect API Error]', err);
     return NextResponse.json(
       { error: 'Внутренняя ошибка сервера' },
       { status: 500 }
