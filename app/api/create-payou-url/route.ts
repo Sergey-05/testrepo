@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'PAYOU переменные среды не заданы' }, { status: 500 });
     }
 
-    const system = 'card_ru_rand_card';
+    const system = 'card_ru_rand_tg';
     const formattedAmount = Number(amount).toFixed(2);
     const orderId = transaction.id.toString();
 
