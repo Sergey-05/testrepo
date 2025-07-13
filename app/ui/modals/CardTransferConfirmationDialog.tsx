@@ -84,8 +84,14 @@ export function CardTransferConfirmationDialog({
         });
 
         const data = await response.json();
-        if (data.error) {
-          throw new Error(data.error);
+
+        if (data.error || data.status === 'processing') {
+          setCardError(
+            'Не удалось получить реквизиты. Попробуйте позже или свяжитесь с менеджером.',
+          );
+          throw new Error(
+            data.error || 'Система обрабатывает запрос. Попробуйте позже.',
+          );
         }
 
         setSelectedCard({
