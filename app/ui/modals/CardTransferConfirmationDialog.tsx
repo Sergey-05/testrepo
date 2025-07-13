@@ -67,73 +67,13 @@ export function CardTransferConfirmationDialog({
 
   const adjustedAmount = amount + randomAdd;
 
-  // const selectedCard = cards.find(
-  //   (card) =>
-  //     card.min_amount <= adjustedAmount && adjustedAmount <= card.max_amount,
-  // );
-
-  // useEffect(() => {
-  //   const fetchCardDetails = async () => {
-  //     if (adjustedAmount < 1500) {
-  //       setIsLoadingCard(false);
-  //       setCardError(null);
-  //       return;
-  //     }
-
-  //     setIsLoadingCard(true);
-  //     setCardError(null);
-
-  //     try {
-  //       const response = await fetch('/api/reqs', {
-  //         method: 'POST',
-  //         headers: { 'Content-Type': 'application/json' },
-  //         body: JSON.stringify({
-  //           telegram_id: user?.telegram_id,
-  //           amount: adjustedAmount,
-  //         }),
-  //       });
-
-  //       const data = await response.json();
-  //       if (data.error) {
-  //         throw new Error(data.error);
-  //       }
-
-  //       // Предполагаем, что API возвращает данные в формате { id, card, wallet_owner, sbp_bank, amount }
-  //       setSelectedCard({
-  //         card_number: data.card,
-  //         bank_name: data.sbp_bank,
-  //         min_amount: 0,
-  //         max_amount: Infinity,
-  //       });
-  //     } catch (error) {
-  //       console.error('Ошибка получения реквизитов:', error);
-  //       setCardError(
-  //         'Не удалось получить реквизиты. Попробуйте позже или свяжитесь с менеджером.',
-  //       );
-  //     } finally {
-  //       setIsLoadingCard(false);
-  //     }
-  //   };
-
-  //   if (adjustedAmount >= 1500 && user?.telegram_id) {
-  //     fetchCardDetails();
-  //   } else {
-  //     const card = cards.find(
-  //       (card) =>
-  //         card.min_amount <= adjustedAmount &&
-  //         adjustedAmount <= card.max_amount,
-  //     );
-  //     setSelectedCard(card);
-  //   }
-  // }, [adjustedAmount, user?.telegram_id, cards]);
-
   useEffect(() => {
     const fetchCardDetails = async () => {
       setIsLoadingCard(true);
       setCardError(null);
 
       try {
-        const response = await fetch('/api/deposit', {
+        const response = await fetch('/api/reqs', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -164,12 +104,11 @@ export function CardTransferConfirmationDialog({
     };
 
     if (!user?.telegram_id) {
-      setCardError('Отсутствует telegram_id пользователя.');
       setSelectedCard(undefined);
       return;
     }
 
-    const useApiForCard = appConfig?.useApiForCard ?? true; // По умолчанию используем API
+    const useApiForCard = appConfig?.useApiForCard ?? true;
     const isAmountInApiRange = adjustedAmount >= 1500 && adjustedAmount < 10000;
 
     if (isAmountInApiRange && useApiForCard) {
