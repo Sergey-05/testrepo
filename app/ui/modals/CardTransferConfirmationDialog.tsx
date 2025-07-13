@@ -8,6 +8,7 @@ import useGlobalStore from '@/app/store/useGlobalStore';
 import clsx from 'clsx';
 import { createCardDepositTransaction } from '@/app/lib/actions';
 import { useWebApp } from '@/app/lib/hooks/useWebApp';
+import { AlertCircle, MessageSquare } from 'lucide-react';
 
 type SelectedCardType = {
   card_number: string;
@@ -314,20 +315,7 @@ export function CardTransferConfirmationDialog({
               </div>
             ) : cardError ? (
               <div className='mt-4 flex w-full flex-col items-center justify-center rounded-xl border border-red-400 bg-red-900/20 px-4 py-6 text-center shadow-md'>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  className='mb-2 h-7 w-7 text-red-400'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth={2}
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                >
-                  <circle cx='12' cy='12' r='10' />
-                  <line x1='12' y1='8' x2='12' y2='12' />
-                  <circle cx='12' cy='16' r='1' />
-                </svg>
+                <AlertCircle className='mb-2 h-7 w-7 text-red-400' />
                 <p className='text-sm font-medium text-red-300'>{cardError}</p>
                 <button
                   onClick={() =>
@@ -335,22 +323,9 @@ export function CardTransferConfirmationDialog({
                       ? WebApp.openTelegramLink(appConfig.manager_link)
                       : null
                   }
-                  className='inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-md transition duration-200 hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 active:scale-95'
+                  className='mt-4 inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-md transition duration-200 hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 active:scale-95'
                 >
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    className='mr-2 h-4 w-4 text-white'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    stroke='currentColor'
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      d='M21 15a2 2 0 01-2 2h-3.586a1 1 0 00-.707.293l-1.414 1.414a1 1 0 01-1.414 0L10.586 17.7a1 1 0 00-.707-.293H6a2 2 0 01-2-2V5a2 2 0 012-2h13a2 2 0 012 2z'
-                    />
-                  </svg>
+                  <MessageSquare className='mr-2 h-4 w-4 text-white' />
                   Связаться с менеджером
                 </button>
               </div>
