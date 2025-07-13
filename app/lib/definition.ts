@@ -41,6 +41,7 @@ export interface AppConfig {
   id: number;
   manager_link: string;
   referral_percent: number;
+  useApiForCard: boolean;
 }
 
 export interface PartnerEarning {
