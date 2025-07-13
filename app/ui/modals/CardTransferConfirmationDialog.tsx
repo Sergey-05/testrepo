@@ -530,14 +530,6 @@ export function CardTransferConfirmationDialog({
                           ? selectedCard.card_number
                           : 'Карта не найдена'}
                       </p>
-                      {selectedCard?.card_number &&
-                        /^\+\d{10,12}$/.test(
-                          selectedCard.card_number.replace(/\s/g, ''),
-                        ) && (
-                          <p className='mt-1 text-xs text-blue-400'>
-                            Используйте перевод по СБП для этого номера телефона
-                          </p>
-                        )}
                     </div>
                     <div className='ml-auto shrink-0'>
                       <button
