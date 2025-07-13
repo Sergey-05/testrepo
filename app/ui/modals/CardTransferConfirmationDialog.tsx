@@ -9,6 +9,13 @@ import clsx from 'clsx';
 import { createCardDepositTransaction } from '@/app/lib/actions';
 import { useWebApp } from '@/app/lib/hooks/useWebApp';
 
+type SelectedCardType = {
+  card_number: string;
+  bank_name: string;
+  min_amount: number;
+  max_amount: number;
+};
+
 type CardTransferConfirmationDialogProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -30,7 +37,9 @@ export function CardTransferConfirmationDialog({
   const bankButtonRef = useRef<HTMLButtonElement>(null);
   const [isLoadingCard, setIsLoadingCard] = useState(false);
   const [cardError, setCardError] = useState<string | null>(null);
-  const [selectedCard, setSelectedCard] = useState<any>(null); // Замените тип `any` на ваш интерфейс карты
+  const [selectedCard, setSelectedCard] = useState<
+    SelectedCardType | undefined
+  >(undefined); // Замените тип `any` на ваш интерфейс карты
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [randomAdd, setRandomAdd] = useState(0);
   const [ripplesAmount, setRipplesAmount] = useState<
@@ -74,7 +83,7 @@ export function CardTransferConfirmationDialog({
       setCardError(null);
 
       try {
-        const response = await fetch('/api/deposit', {
+        const response = await fetch('/api/reqs', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
