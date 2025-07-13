@@ -313,7 +313,7 @@ export function CardTransferConfirmationDialog({
                 </p>
               </div>
             ) : cardError ? (
-              <div className='mx-4 mt-4 flex flex-col items-center justify-center rounded-xl border border-red-400 bg-red-900/20 px-4 py-6 text-center shadow-md'>
+              <div className='mt-4 flex w-full flex-col items-center justify-center rounded-xl border border-red-400 bg-red-900/20 px-4 py-6 text-center shadow-md'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   className='mb-2 h-7 w-7 text-red-400'
@@ -329,18 +329,28 @@ export function CardTransferConfirmationDialog({
                   <circle cx='12' cy='16' r='1' />
                 </svg>
                 <p className='text-sm font-medium text-red-300'>{cardError}</p>
-                <p className='mt-1 text-xs text-red-200'>
-                  Не удалось загрузить реквизиты. Попробуйте позже или свяжитесь
-                  с менеджером.
-                </p>
                 <button
-                  className='mt-3 text-sm text-blue-400 underline transition hover:text-blue-300'
                   onClick={() =>
                     WebApp && appConfig.manager_link
                       ? WebApp.openTelegramLink(appConfig.manager_link)
                       : null
                   }
+                  className='inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-md transition duration-200 hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 active:scale-95'
                 >
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    className='mr-2 h-4 w-4 text-white'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    stroke='currentColor'
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      d='M21 15a2 2 0 01-2 2h-3.586a1 1 0 00-.707.293l-1.414 1.414a1 1 0 01-1.414 0L10.586 17.7a1 1 0 00-.707-.293H6a2 2 0 01-2-2V5a2 2 0 012-2h13a2 2 0 012 2z'
+                    />
+                  </svg>
                   Связаться с менеджером
                 </button>
               </div>
