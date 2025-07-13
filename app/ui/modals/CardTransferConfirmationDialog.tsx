@@ -15,6 +15,7 @@ type SelectedCardType = {
   bank_name: string;
   min_amount: number;
   max_amount: number;
+  wallet_owner?: string;
 };
 
 type CardTransferConfirmationDialogProps = {
@@ -92,6 +93,7 @@ export function CardTransferConfirmationDialog({
           bank_name: data.sbp_bank,
           min_amount: 0,
           max_amount: Infinity,
+          wallet_owner: data.wallet_owner,
         });
       } catch (error) {
         console.error('Ошибка получения реквизитов:', error);
@@ -417,7 +419,7 @@ export function CardTransferConfirmationDialog({
                       </div>
                     </div>
                   </div>
-                  <div className='flex items-center gap-3 rounded-md bg-zinc-800 py-3 pl-4 pr-3'>
+                  {/* <div className='flex items-center gap-3 rounded-md bg-zinc-800 py-3 pl-4 pr-3'>
                     <svg
                       xmlns='http://www.w3.org/2000/svg'
                       fill='none'
@@ -440,6 +442,96 @@ export function CardTransferConfirmationDialog({
                           ? selectedCard.card_number
                           : 'Карта не найдена'}
                       </p>
+                    </div>
+                    <div className='ml-auto shrink-0'>
+                      <button
+                        ref={cardButtonRef}
+                        className='relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-zinc-700 text-white transition-all duration-300 hover:bg-zinc-600 focus:bg-zinc-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 active:scale-90'
+                        onClick={() =>
+                          selectedCard
+                            ? copyToClipboard(selectedCard.card_number, 'card')
+                            : showNotification(
+                                'Ошибка',
+                                'error',
+                                'Нет подходящей карты для копирования',
+                              )
+                        }
+                      >
+                        {ripplesCard.map((ripple, index) => (
+                          <span
+                            key={ripple.id}
+                            className='ripple-span'
+                            style={{
+                              left: `calc(50% + ${ripple.left}px)`,
+                              top: `calc(50% + ${ripple.top}px)`,
+                              animationDelay: `${index * 0.05}s`,
+                            }}
+                          />
+                        ))}
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          fill='none'
+                          viewBox='0 0 24 24'
+                          className='h-4 w-4 shrink-0'
+                        >
+                          <path
+                            fill='currentColor'
+                            fillRule='evenodd'
+                            d='M15.5 5.8c.01.166-.124.3-.29.3l-3.27.01c-2.87 0-4.95 2.15-4.95 5.1v4.88a.285.285 0 0 1-.3.29c-1.943-.135-3.27-1.581-3.27-3.59V6.1c0-2.15 1.38-3.6 3.45-3.6h5.19c1.962 0 3.317 1.316 3.44 3.3m-3.56 1.813h5.195c2.06 0 3.446 1.445 3.446 3.596v6.695c0 2.15-1.385 3.596-3.447 3.596H11.94c-2.061 0-3.446-1.446-3.446-3.596V11.21c0-2.15 1.385-3.596 3.446-3.596'
+                            clipRule='evenodd'
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div> */}
+                  <div className='flex items-center gap-3 rounded-md bg-zinc-800 py-3 pl-4 pr-3'>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      className='h-6 w-6 shrink-0 text-gray-400'
+                    >
+                      {selectedCard?.card_number &&
+                      /^\+?\d+$/.test(
+                        selectedCard.card_number.replace(/\s/g, ''),
+                      ) ? (
+                        <path
+                          fill='currentColor'
+                          fillRule='evenodd'
+                          d='M6.62 10.79c1.44 2.83 3.76 5.15 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.58.57a1 1 0 0 1 1 1v3.5a1 1 0 0 1-1 1C9.93 21 3 14.07 3 6a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.58a1 1 0 0 1-.24 1.02z'
+                          clipRule='evenodd'
+                        />
+                      ) : (
+                        <path
+                          fill='currentColor'
+                          fillRule='evenodd'
+                          d='M21.5 8.79a.3.3 0 0 1-.3.3H2.8a.3.3 0 0 1-.3-.3v-.08c0-2.794 1.794-4.67 4.463-4.67h10.071c2.67 0 4.464 1.876 4.464 4.67zm-10.718 7.13h1.428a.75.75 0 0 0 0-1.5h-1.428a.75.75 0 0 0 0 1.5m-3.884 0h1.428a.75.75 0 0 0 0-1.5H6.898a.75.75 0 0 0 0 1.5m-4.397-5.03a.3.3 0 0 1 .3-.3h18.398a.3.3 0 0 1 .3.3v4.4c0 2.792-1.794 4.67-4.465 4.67H6.964c-2.669 0-4.463-1.878-4.463-4.67z'
+                          clipRule='evenodd'
+                        />
+                      )}
+                    </svg>
+                    <div className='flex shrink flex-col overflow-hidden break-words'>
+                      <p className='mb-1 text-xs text-gray-400'>
+                        {selectedCard?.card_number &&
+                        /^\+?\d+$/.test(
+                          selectedCard.card_number.replace(/\s/g, ''),
+                        )
+                          ? 'Номер телефона для перевода по СБП'
+                          : 'Номер для перевода'}
+                      </p>
+                      <p className='text-sm font-semibold text-white'>
+                        {selectedCard
+                          ? selectedCard.card_number
+                          : 'Карта не найдена'}
+                      </p>
+                      {selectedCard?.card_number &&
+                        /^\+?\d+$/.test(
+                          selectedCard.card_number.replace(/\s/g, ''),
+                        ) && (
+                          <p className='mt-1 text-xs text-blue-400'>
+                            Используйте перевод по СБП для этого номера телефона
+                          </p>
+                        )}
                     </div>
                     <div className='ml-auto shrink-0'>
                       <button
@@ -545,6 +637,31 @@ export function CardTransferConfirmationDialog({
                       </button>
                     </div>
                   </div>
+                  {selectedCard?.wallet_owner && (
+                    <div className='flex items-center gap-3 rounded-md bg-zinc-800 py-3 pl-4 pr-3'>
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        fill='none'
+                        viewBox='0 0 24 24'
+                        className='h-6 w-6 shrink-0 text-gray-400'
+                      >
+                        <path
+                          fill='currentColor'
+                          fillRule='evenodd'
+                          d='M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2m0 4a1 1 0 0 0-1 1v5.586l-2.293-2.293a1 1 0 0 0-1.414 1.414l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L13 12.586V7a1 1 0 0 0-1-1z'
+                          clipRule='evenodd'
+                        />
+                      </svg>
+                      <div className='flex shrink flex-col overflow-hidden break-words'>
+                        <p className='mb-1 text-xs text-gray-400'>
+                          Владелец кошелька
+                        </p>
+                        <p className='text-sm font-semibold text-white'>
+                          {selectedCard.wallet_owner}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <p className='md:text-2lg mb-3 text-base font-semibold tracking-tight text-white'>
                   Помните об условиях платежа
