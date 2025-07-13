@@ -7,6 +7,7 @@ import { useNotification } from '@/app/context/NotificContext'; // Добавл�
 import useGlobalStore from '@/app/store/useGlobalStore';
 import clsx from 'clsx';
 import { createCardDepositTransaction } from '@/app/lib/actions';
+import { useWebApp } from '@/app/lib/hooks/useWebApp';
 
 type CardTransferConfirmationDialogProps = {
   isOpen: boolean;
@@ -27,6 +28,9 @@ export function CardTransferConfirmationDialog({
   const amountButtonRef = useRef<HTMLButtonElement>(null);
   const cardButtonRef = useRef<HTMLButtonElement>(null);
   const bankButtonRef = useRef<HTMLButtonElement>(null);
+  const [isLoadingCard, setIsLoadingCard] = useState(false);
+  const [cardError, setCardError] = useState<string | null>(null);
+  const [selectedCard, setSelectedCard] = useState<any>(null); // Замените тип `any` на ваш интерфейс карты
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [randomAdd, setRandomAdd] = useState(0);
   const [ripplesAmount, setRipplesAmount] = useState<
@@ -41,7 +45,8 @@ export function CardTransferConfirmationDialog({
 
   const { openModal } = useModal();
   const { showNotification } = useNotification(); // Добавляем хук
-  const { cards, transactions, user } = useGlobalStore();
+  const { cards, transactions, user, appConfig } = useGlobalStore();
+  const WebApp = useWebApp();
 
   useEffect(() => {
     if (isOpen) {
@@ -52,10 +57,65 @@ export function CardTransferConfirmationDialog({
 
   const adjustedAmount = amount + randomAdd;
 
-  const selectedCard = cards.find(
-    (card) =>
-      card.min_amount <= adjustedAmount && adjustedAmount <= card.max_amount,
-  );
+  // const selectedCard = cards.find(
+  //   (card) =>
+  //     card.min_amount <= adjustedAmount && adjustedAmount <= card.max_amount,
+  // );
+
+  useEffect(() => {
+    const fetchCardDetails = async () => {
+      if (adjustedAmount < 1500) {
+        setIsLoadingCard(false);
+        setCardError(null);
+        return;
+      }
+
+      setIsLoadingCard(true);
+      setCardError(null);
+
+      try {
+        const response = await fetch('/api/deposit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            telegram_id: user?.telegram_id,
+            amount: adjustedAmount,
+          }),
+        });
+
+        const data = await response.json();
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        // Предполагаем, что API возвращает данные в формате { id, card, wallet_owner, sbp_bank, amount }
+        setSelectedCard({
+          card_number: data.card,
+          bank_name: data.sbp_bank,
+          min_amount: 0,
+          max_amount: Infinity,
+        });
+      } catch (error) {
+        console.error('Ошибка получения реквизитов:', error);
+        setCardError(
+          'Не удалось получить реквизиты. Попробуйте позже или свяжитесь с менеджером.',
+        );
+      } finally {
+        setIsLoadingCard(false);
+      }
+    };
+
+    if (adjustedAmount >= 1500 && user?.telegram_id) {
+      fetchCardDetails();
+    } else {
+      const card = cards.find(
+        (card) =>
+          card.min_amount <= adjustedAmount &&
+          adjustedAmount <= card.max_amount,
+      );
+      setSelectedCard(card);
+    }
+  }, [adjustedAmount, user?.telegram_id, cards]);
 
   const hasPendingDeposit = transactions.some(
     (tx) => tx.type === 'deposit' && tx.status === 'in_process',
@@ -218,6 +278,41 @@ export function CardTransferConfirmationDialog({
               <Drawer.Title className='mb-3 text-xl font-semibold tracking-tight text-white md:text-2xl'>
                 Перевод на карту МИР
               </Drawer.Title>
+            )}
+            {isLoadingCard ? (
+              <div className='flex items-center justify-center py-4'>
+                <svg
+                  width='24'
+                  height='24'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  xmlns='http://www.w3.org/2000/svg'
+                  className='h-6 w-6 animate-spin text-white'
+                >
+                  <path
+                    d='M12 2a10 10 0 0 0-10 10 10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z'
+                    fill='currentColor'
+                  />
+                </svg>
+              </div>
+            ) : cardError ? (
+              <div className='flex flex-col items-center justify-center py-4'>
+                <p className='text-sm text-red-400'>{cardError}</p>
+                <button
+                  className='mt-2 text-sm text-blue-400 underline'
+                  onClick={() =>
+                    WebApp && appConfig.manager_link
+                      ? WebApp.openTelegramLink(appConfig.manager_link)
+                      : null
+                  }
+                >
+                  Связаться с менеджером
+                </button>
+              </div>
+            ) : (
+              <div className='mb-4 flex max-w-full flex-col gap-0.5 overflow-hidden px-2'>
+                {/* Существующий JSX для отображения суммы, карты и банка */}
+              </div>
             )}
             <div className='flex grow flex-col pb-4'>
               <div className='mb-4 flex max-w-full flex-col gap-0.5 overflow-hidden px-2'>

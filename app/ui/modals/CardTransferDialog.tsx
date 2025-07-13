@@ -10,7 +10,6 @@ import { useModal } from '@/app/context/ModalContext';
 import useGlobalStore from '@/app/store/useGlobalStore';
 import { useNotification } from '@/app/context/NotificContext';
 import { fetchPaymentData } from '@/app/lib/dataQuery';
-import { useWebApp } from '@/app/lib/hooks/useWebApp';
 
 type CardTransferDialogProps = {
   isOpen: boolean;
@@ -50,16 +49,13 @@ export function CardTransferDialog({
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const WebApp = useWebApp();
-
   const {
     bonuses,
+    setCards,
+    setBonuses,
     cards,
     cryptoWallets,
-    setCards,
     setCryptoWallets,
-    setBonuses,
-    user,
   } = useGlobalStore();
 
   const { openModal } = useModal();
@@ -147,84 +143,26 @@ export function CardTransferDialog({
     }
   };
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (isAmountValid) {
-  //     if (isCryptoMethod && selectedMethod?.network) {
-  //       openModal('CryptoPaymentDialog', {
-  //         method: {
-  //           id: selectedMethod.id,
-  //           title: selectedMethod.title,
-  //           network: selectedMethod.network,
-  //         },
-  //         selectedAmount: parsedAmount || 0,
-  //       });
-  //     } else {
-  //       openModal('CardTransferConfirmationDialog', {
-  //         amount: parsedAmount || 0,
-  //         methodId,
-  //       });
-  //     }
-  //     onClose();
-  //   }
-  // };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!isAmountValid || !user?.telegram_id) return;
-
-    if (isCryptoMethod && selectedMethod?.network) {
-      try {
-        const res = await fetch('/api/create-payou-url-new', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            telegramId: user.telegram_id,
-            amount: parsedAmount,
-          }),
+    if (isAmountValid) {
+      if (isCryptoMethod && selectedMethod?.network) {
+        openModal('CryptoPaymentDialog', {
+          method: {
+            id: selectedMethod.id,
+            title: selectedMethod.title,
+            network: selectedMethod.network,
+          },
+          selectedAmount: parsedAmount || 0,
         });
-
-        const data = await res.json();
-
-        if (!res.ok || !data.url) {
-          throw new Error(data.error || 'Не удалось получить ссылку');
-        }
-
-        if (WebApp) {
-          WebApp.openLink(data.url);
-        }
-      } catch (error) {
-        console.error('Ошибка оплаты:', error);
-        showNotification('Ошибка', 'error', 'Не удалось начать оплату');
-      }
-    } else {
-      try {
-        const res = await fetch('/api/create-payou-url', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            telegramId: user.telegram_id,
-            amount: parsedAmount,
-          }),
+      } else {
+        openModal('CardTransferConfirmationDialog', {
+          amount: parsedAmount || 0,
+          methodId,
         });
-
-        const data = await res.json();
-
-        if (!res.ok || !data.url) {
-          throw new Error(data.error || 'Не удалось получить ссылку');
-        }
-
-        if (WebApp) {
-          WebApp.openLink(data.url);
-        }
-      } catch (error) {
-        console.error('Ошибка оплаты:', error);
-        showNotification('Ошибка', 'error', 'Не удалось начать оплату');
       }
+      onClose();
     }
-
-    onClose();
   };
 
   // Найти метод по methodId
@@ -488,7 +426,7 @@ export function CardTransferDialog({
                   data-mixpanel={`{"button_name":"Continue payment","page_name":"Transfer to card popup window","popup_window":true,"deposit_method_name":"${getMethodTitle()}","deposit_amount":"${parsedAmount || 0}","currency":"RUB"}`}
                   disabled={!isAmountValid}
                 >
-                  Продолжить
+                  Оплатить
                 </button>
               </form>
             )}
