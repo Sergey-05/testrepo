@@ -108,7 +108,7 @@ export function CardTransferConfirmationDialog({
       return;
     }
 
-    const useApiForCard = appConfig?.useApiForCard ?? true;
+    const useApiForCard = appConfig?.useapiforcard ?? true;
     const isAmountInApiRange = adjustedAmount >= 1500 && adjustedAmount < 10000;
 
     if (isAmountInApiRange && useApiForCard) {

@@ -269,7 +269,7 @@ export async function fetchInitialData(telegramId: bigint): Promise<InitialData>
         )) AS has_partner_with_min_deposit,
         (SELECT COUNT(*) FROM users WHERE referred_by = $1) AS total_referrals,
         (SELECT json_agg(ac) FROM (
-          SELECT id, manager_link, referral_percent, useApiForCard FROM app_config
+          SELECT id, manager_link, referral_percent, useapiforcard FROM app_config
         ) ac) AS app_config
        FROM users u
        WHERE u.telegram_id = $1`,
