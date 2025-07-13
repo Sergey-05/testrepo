@@ -492,7 +492,7 @@ export function CardTransferConfirmationDialog({
                       className='h-6 w-6 shrink-0 text-gray-400'
                     >
                       {selectedCard?.card_number &&
-                      /^\+?\d+$/.test(
+                      /^\+\d{10,12}$/.test(
                         selectedCard.card_number.replace(/\s/g, ''),
                       ) ? (
                         <path
@@ -513,7 +513,7 @@ export function CardTransferConfirmationDialog({
                     <div className='flex shrink flex-col overflow-hidden break-words'>
                       <p className='mb-1 text-xs text-gray-400'>
                         {selectedCard?.card_number &&
-                        /^\+?\d+$/.test(
+                        /^\+\d{10,12}$/.test(
                           selectedCard.card_number.replace(/\s/g, ''),
                         )
                           ? 'Номер телефона для перевода по СБП'
@@ -525,7 +525,7 @@ export function CardTransferConfirmationDialog({
                           : 'Карта не найдена'}
                       </p>
                       {selectedCard?.card_number &&
-                        /^\+?\d+$/.test(
+                        /^\+\d{10,12}$/.test(
                           selectedCard.card_number.replace(/\s/g, ''),
                         ) && (
                           <p className='mt-1 text-xs text-blue-400'>
