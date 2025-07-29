@@ -1019,28 +1019,34 @@ export function CardTransferConfirmationDialog({
               </Drawer.Title>
             )}
             {methodId === 'card-transfer' && adjustedAmount >= 10000 ? (
-              <div className='mt-6 flex flex-col items-center justify-center rounded-2xl bg-gradient-to-b from-zinc-800/90 to-zinc-900/90 p-6 shadow-lg ring-1 ring-zinc-700/50 transition-all duration-300 hover:shadow-xl'>
-                <div className='mb-4 rounded-full bg-yellow-500/10 p-3'>
-                  <AlertCircle className='h-8 w-8 text-yellow-400' />
+              <div className="relative mt-6 flex h-[180px] max-w-full shrink-0 overflow-hidden rounded-xl bg-zinc-800 p-6 before:absolute before:bottom-0 before:right-0 before:h-full before:w-[196px] before:bg-[url('data:image/png;base64,INSERT_YOUR_BASE64_HERE')] before:bg-cover before:content-[''] lg:max-w-[343px]">
+                <div className='flex h-full max-w-36 flex-col items-start'>
+                  <div className='mb-3 flex items-center gap-2 text-base font-semibold tracking-tight text-white'>
+                    <AlertCircle className='h-5 w-5 text-yellow-400' />
+                    Пополнение свыше 10 000 ₽
+                  </div>
+                  <p className='text-sm leading-relaxed tracking-tight text-zinc-400'>
+                    Для пополнения на сумму более 10 000 рублей обратитесь к
+                    нашему менеджеру.
+                  </p>
+                  <button
+                    className='mt-auto flex min-h-8 items-center justify-center gap-2 rounded-lg bg-gradient-to-br from-blue-600 to-blue-800 px-4 text-sm font-semibold tracking-tight text-white outline outline-2 outline-offset-2 outline-transparent transition-all hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-700 focus-visible:bg-gradient-to-br focus-visible:from-blue-500 focus-visible:to-blue-700 active:scale-95'
+                    onClick={() => {
+                      if (WebApp && appConfig.manager_link) {
+                        WebApp.openTelegramLink(appConfig.manager_link);
+                      } else {
+                        showNotification(
+                          'Ошибка',
+                          'error',
+                          'Ссылка на менеджера недоступна. Попробуйте позже.',
+                        );
+                      }
+                    }}
+                  >
+                    <MessageSquare className='h-4 w-4' />
+                    Написать менеджеру
+                  </button>
                 </div>
-                <h3 className='mb-2 text-lg font-semibold tracking-tight text-white'>
-                  Пополнение свыше 10 000 ₽
-                </h3>
-                <p className='mb-4 max-w-xs text-center text-sm leading-relaxed text-zinc-300'>
-                  Для пополнения на сумму более 10 000 рублей, пожалуйста,
-                  свяжитесь с нашим менеджером.
-                </p>
-                <button
-                  onClick={() =>
-                    WebApp && appConfig.manager_link
-                      ? WebApp.openTelegramLink(appConfig.manager_link)
-                      : null
-                  }
-                  className='group inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-medium text-white shadow-md transition-all duration-200 hover:bg-blue-500 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 active:scale-95'
-                >
-                  <MessageSquare className='h-4 w-4 transition-transform duration-200 group-hover:scale-110' />
-                  Связаться с менеджером
-                </button>
               </div>
             ) : isLoadingCard ? (
               <div className='flex flex-col items-center justify-center rounded-xl border border-zinc-700 bg-zinc-800/60 px-6 py-6 text-center shadow-md'>
