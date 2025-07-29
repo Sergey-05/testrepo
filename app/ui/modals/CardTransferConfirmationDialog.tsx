@@ -1019,14 +1019,16 @@ export function CardTransferConfirmationDialog({
               </Drawer.Title>
             )}
             {methodId === 'card-transfer' && adjustedAmount >= 10000 ? (
-              <div className='mt-4 flex w-full flex-col items-center justify-center rounded-xl border border-yellow-400 bg-yellow-900/20 px-4 py-6 text-center shadow-md'>
-                <AlertCircle className='mb-2 h-7 w-7 text-yellow-400' />
-                <p className='text-sm font-medium text-yellow-300'>
-                  Пополнение на сумму более 10 000 рублей возможно только через
-                  менеджера.
-                </p>
-                <p className='mt-1 text-xs text-gray-300'>
-                  Свяжитесь с нашим менеджером для продолжения.
+              <div className='mt-6 flex flex-col items-center justify-center rounded-2xl bg-gradient-to-b from-zinc-800/90 to-zinc-900/90 p-6 shadow-lg ring-1 ring-zinc-700/50 transition-all duration-300 hover:shadow-xl'>
+                <div className='mb-4 rounded-full bg-yellow-500/10 p-3'>
+                  <AlertCircle className='h-8 w-8 text-yellow-400' />
+                </div>
+                <h3 className='mb-2 text-lg font-semibold tracking-tight text-white'>
+                  Пополнение свыше 10 000 ₽
+                </h3>
+                <p className='mb-4 max-w-xs text-center text-sm leading-relaxed text-zinc-300'>
+                  Для пополнения на сумму более 10 000 рублей, пожалуйста,
+                  свяжитесь с нашим менеджером.
                 </p>
                 <button
                   onClick={() =>
@@ -1034,9 +1036,9 @@ export function CardTransferConfirmationDialog({
                       ? WebApp.openTelegramLink(appConfig.manager_link)
                       : null
                   }
-                  className='mt-4 inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-md transition duration-200 hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 active:scale-95'
+                  className='group inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-medium text-white shadow-md transition-all duration-200 hover:bg-blue-500 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 active:scale-95'
                 >
-                  <MessageSquare className='mr-2 h-4 w-4 text-white' />
+                  <MessageSquare className='h-4 w-4 transition-transform duration-200 group-hover:scale-110' />
                   Связаться с менеджером
                 </button>
               </div>
