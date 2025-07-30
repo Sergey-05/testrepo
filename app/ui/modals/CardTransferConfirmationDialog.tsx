@@ -1033,8 +1033,9 @@ export function CardTransferConfirmationDialog({
                 Перевод на карту МИР
               </Drawer.Title>
             )}
-            {methodId === 'card-transfer' && adjustedAmount >= 10000 ? (
-              <div className='flex flex-col gap-4'>
+            {appConfig?.manager_only_threshold &&
+            adjustedAmount >= appConfig.manager_only_threshold ? (
+              <div className='flex w-full flex-col gap-4'>
                 {/* Блок оповещения */}
                 <div className="relative flex h-[164px] max-w-full shrink-0 overflow-hidden rounded-xl bg-zinc-800 p-4 before:absolute before:bottom-0 before:right-0 before:h-full before:w-[196px] before:bg-[url('data:image/png;base64,...')] before:bg-cover before:content-[''] lg:max-w-[277px] xl:max-w-[343px]">
                   <div className='flex h-full max-w-36 flex-col items-start'>
@@ -1053,37 +1054,9 @@ export function CardTransferConfirmationDialog({
                       Лимит пополнения
                     </div>
                     <p className='text-sm leading-relaxed tracking-tight text-zinc-400'>
-                      Пополнение свыше 10 000 ₽ возможно только через менеджера.
+                      Пополнение свыше {appConfig.manager_only_threshold} ₽
+                      возможно только через менеджера.
                     </p>
-                    <button
-                      className='mt-auto flex min-h-8 items-center justify-center gap-2 rounded-lg bg-gradient-to-br from-blue-600 to-blue-800 px-4 text-sm font-semibold tracking-tight text-white outline outline-2 outline-offset-2 outline-transparent transition-all hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-700 focus-visible:bg-gradient-to-br focus-visible:from-blue-500 focus-visible:to-blue-700 active:scale-95'
-                      onClick={() => {
-                        if (WebApp && appConfig?.manager_link) {
-                          WebApp.openTelegramLink(appConfig.manager_link);
-                        } else {
-                          showNotification(
-                            'Ошибка',
-                            'error',
-                            'Ссылка на менеджера недоступна. Попробуйте позже.',
-                          );
-                        }
-                      }}
-                    >
-                      <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        fill='none'
-                        viewBox='0 0 24 24'
-                        className='h-4 w-4'
-                      >
-                        <path
-                          fill='currentColor'
-                          fillRule='evenodd'
-                          d='M4 4a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3zm5 12a1 1 0 0 1 1-1h4a1 1 0 0 1 0 2h-4a1 1 0 0 1-1-1m0-4a1 1 0 0 1 1-1h4a1 1 0 0 1 0 2h-4a1 1 0 0 1-1-1m0-4a1 1 0 0 1 1-1h4a1 1 0 0 1 0 2h-4a1 1 0 0 1-1-1'
-                          clipRule='evenodd'
-                        />
-                      </svg>
-                      Написать менеджеру
-                    </button>
                   </div>
                   <Image
                     alt='notification image'
@@ -1093,89 +1066,35 @@ export function CardTransferConfirmationDialog({
                     className='absolute bottom-0 right-0 h-[164px] w-[164px]'
                   />
                 </div>
-                {/* Блок поддержки */}
-                <div className="relative flex h-[164px] max-w-full shrink-0 overflow-hidden rounded-xl bg-zinc-800 p-4 before:absolute before:bottom-0 before:right-0 before:h-full before:w-[196px] before:bg-[url('data:image/png;base64,...')] before:bg-cover before:content-[''] lg:max-w-[277px] xl:max-w-[343px]">
-                  <div className='flex h-full max-w-36 flex-col items-start'>
-                    <div className='mb-3 flex items-center gap-2 text-base font-semibold tracking-tight text-white'>
-                      Поддержка
-                      <div className='flex items-center rounded-full bg-gradient-to-br from-purple-900 to-gray-800 p-0.5 px-2 py-1 text-xs font-semibold tracking-tight text-white'>
-                        24/7
-                      </div>
-                    </div>
-                    <p className='text-sm tracking-tight text-zinc-400'>
-                      Обратитесь к нам, если есть вопросы
-                    </p>
-                    <button
-                      className='mt-auto flex min-h-8 items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 text-sm font-semibold tracking-tight text-white outline outline-2 outline-offset-2 outline-transparent transition-all hover:bg-zinc-800 focus-visible:bg-zinc-800 active:scale-95'
-                      onClick={() => {
-                        if (WebApp && appConfig?.manager_link) {
-                          WebApp.openTelegramLink(appConfig.manager_link);
-                        }
-                      }}
-                    >
-                      <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        fill='none'
-                        viewBox='0 0 24 24'
-                        className='h-4 w-4'
-                      >
-                        <path
-                          fill='currentColor'
-                          fillRule='evenodd'
-                          d='M4 4a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3zm5 12a1 1 0 0 1 1-1h4a1 1 0 0 1 0 2h-4a1 1 0 0 1-1-1m0-4a1 1 0 0 1 1-1h4a1 1 0 0 1 0 2h-4a1 1 0 0 1-1-1m0-4a1 1 0 0 1 1-1h4a1 1 0 0 1 0 2h-4a1 1 0 0 1-1-1'
-                          clipRule='evenodd'
-                        />
-                      </svg>
-                      Написать
-                    </button>
-                  </div>
-                  <Image
-                    alt='support image'
-                    width={164}
-                    height={164}
-                    src={support.wSup}
-                    className='absolute bottom-0 right-0 h-[164px] w-[164px]'
-                  />
-                </div>
-              </div>
-            ) : isLoadingCard ? (
-              <div className='flex flex-col items-center justify-center rounded-xl border border-zinc-700 bg-zinc-800/60 px-6 py-6 text-center shadow-md'>
-                <div className='mb-3 flex items-center justify-center'>
+
+                <button
+                  className='flex min-h-8 w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-br from-blue-600 to-blue-800 px-4 text-sm font-semibold tracking-tight text-white outline outline-2 outline-offset-2 outline-transparent transition-all hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-700 focus-visible:bg-gradient-to-br focus-visible:from-blue-500 focus-visible:to-blue-700 active:scale-95'
+                  onClick={() => {
+                    if (WebApp && appConfig?.manager_link) {
+                      WebApp.openTelegramLink(appConfig.manager_link);
+                    } else {
+                      showNotification(
+                        'Ошибка',
+                        'error',
+                        'Ссылка на менеджера недоступна. Попробуйте позже.',
+                      );
+                    }
+                  }}
+                >
                   <svg
-                    width='24'
-                    height='24'
-                    viewBox='0 0 17 16'
-                    fill='none'
                     xmlns='http://www.w3.org/2000/svg'
-                    className='h-6 w-6 animate-spin text-indigo-400'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    className='h-4 w-4'
                   >
                     <path
-                      d='M8.5 0C10.0823 1.88681e-08 11.617 0.469192 12.9446 1.34824C14.2602 2.22728 15.2855 3.47672 15.891 4.93853C16.4965 6.40034 16.655 8.00887 16.3463 9.56072C16.0376 11.1126 15.2757 12.538 14.1569 13.6569C13.038 14.7757 11.6126 15.5376 10.0607 15.8463C8.50887 16.155 6.90034 15.9965 5.43853 15.391C3.97672 14.7855 2.72729 13.7602 1.84824 12.4446C0.969192 11.129 0.5 9.58225 0.5 8H2.5C2.5 9.18669 2.85189 10.3467 3.51118 11.3334C4.17047 12.3201 5.10754 13.0892 6.2039 13.5433C7.30026 13.9974 8.50666 14.1162 9.67054 13.8847C10.8344 13.6532 11.9035 13.0818 12.7426 12.2426C13.5818 11.4035 14.1532 10.3344 14.3847 9.17054C14.6162 8.00666 14.4974 6.80026 14.0433 5.7039C13.5892 4.60754 12.8201 3.67047 11.8334 3.01118C10.8467 2.35189 9.68669 2 8.5 2V0Z'
                       fill='currentColor'
+                      fillRule='evenodd'
+                      d='M4 4a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3zm5 12a1 1 0 0 1 1-1h4a1 1 0 0 1 0 2h-4a1 1 0 0 1-1-1m0-4a1 1 0 0 1 1-1h4a1 1 0 0 1 0 2h-4a1 1 0 0 1-1-1m0-4a1 1 0 0 1 1-1h4a1 1 0 0 1 0 2h-4a1 1 0 0 1-1-1'
+                      clipRule='evenodd'
                     />
                   </svg>
-                </div>
-                <p className='text-sm font-medium text-gray-300'>
-                  Загружаем реквизиты карты...
-                </p>
-                <p className='mt-1 text-xs text-gray-500'>
-                  Пожалуйста, подождите несколько секунд
-                </p>
-              </div>
-            ) : cardError ? (
-              <div className='mt-4 flex w-full flex-col items-center justify-center rounded-xl border border-red-400 bg-red-900/20 px-4 py-6 text-center shadow-md'>
-                <AlertCircle className='mb-2 h-7 w-7 text-red-400' />
-                <p className='text-sm font-medium text-red-300'>{cardError}</p>
-                <button
-                  onClick={() =>
-                    WebApp && appConfig.manager_link
-                      ? WebApp.openTelegramLink(appConfig.manager_link)
-                      : null
-                  }
-                  className='mt-4 inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-md transition duration-200 hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 active:scale-95'
-                >
-                  <MessageSquare className='mr-2 h-4 w-4 text-white' />
-                  Связаться с менеджером
+                  Написать менеджеру
                 </button>
               </div>
             ) : (
