@@ -732,9 +732,9 @@ import useGlobalStore from '@/app/store/useGlobalStore';
 import clsx from 'clsx';
 import { createCardDepositTransaction } from '@/app/lib/actions';
 import { useWebApp } from '@/app/lib/hooks/useWebApp';
-import { AlertCircle, MessageSquare } from 'lucide-react';
 import { support } from '@/app/lib/images';
 import Image from 'next/image';
+import { AlertCircle, MessageSquare } from 'lucide-react';
 
 type SelectedCardType = {
   card_number: string;
@@ -1095,6 +1095,46 @@ export function CardTransferConfirmationDialog({
                     />
                   </svg>
                   Написать менеджеру
+                </button>
+              </div>
+            ) : isLoadingCard ? (
+              <div className='flex flex-col items-center justify-center rounded-xl border border-zinc-700 bg-zinc-800/60 px-6 py-6 text-center shadow-md'>
+                <div className='mb-3 flex items-center justify-center'>
+                  <svg
+                    width='24'
+                    height='24'
+                    viewBox='0 0 17 16'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                    className='h-6 w-6 animate-spin text-indigo-400'
+                  >
+                    <path
+                      d='M8.5 0C10.0823 1.88681e-08 11.617 0.469192 12.9446 1.34824C14.2602 2.22728 15.2855 3.47672 15.891 4.93853C16.4965 6.40034 16.655 8.00887 16.3463 9.56072C16.0376 11.1126 15.2757 12.538 14.1569 13.6569C13.038 14.7757 11.6126 15.5376 10.0607 15.8463C8.50887 16.155 6.90034 15.9965 5.43853 15.391C3.97672 14.7855 2.72729 13.7602 1.84824 12.4446C0.969192 11.129 0.5 9.58225 0.5 8H2.5C2.5 9.18669 2.85189 10.3467 3.51118 11.3334C4.17047 12.3201 5.10754 13.0892 6.2039 13.5433C7.30026 13.9974 8.50666 14.1162 9.67054 13.8847C10.8344 13.6532 11.9035 13.0818 12.7426 12.2426C13.5818 11.4035 14.1532 10.3344 14.3847 9.17054C14.6162 8.00666 14.4974 6.80026 14.0433 5.7039C13.5892 4.60754 12.8201 3.67047 11.8334 3.01118C10.8467 2.35189 9.68669 2 8.5 2V0Z'
+                      fill='currentColor'
+                    />
+                  </svg>
+                </div>
+                <p className='text-sm font-medium text-gray-300'>
+                  Загружаем реквизиты карты...
+                </p>
+                <p className='mt-1 text-xs text-gray-500'>
+                  Пожалуйста, подождите несколько секунд
+                </p>
+              </div>
+            ) : cardError ? (
+              <div className='mt-4 flex w-full flex-col items-center justify-center rounded-xl border border-red-400 bg-red-900/20 px-4 py-6 text-center shadow-md'>
+                <AlertCircle className='mb-2 h-7 w-7 text-red-400' />
+                <p className='text-sm font-medium text-red-300'>{cardError}</p>
+                <button
+                  onClick={() =>
+                    WebApp && appConfig.manager_link
+                      ? WebApp.openTelegramLink(appConfig.manager_link)
+                      : null
+                  }
+                  className='mt-4 inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-md transition duration-200 hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 active:scale-95'
+                >
+                  <MessageSquare className='mr-2 h-4 w-4 text-white' />
+                  Связаться с менеджером
                 </button>
               </div>
             ) : (
