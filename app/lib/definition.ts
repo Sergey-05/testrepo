@@ -42,6 +42,8 @@ export interface AppConfig {
   manager_link: string;
   referral_percent: number;
   useapiforcard: boolean;
+  api_amount_ranges: { min: number; max: number }[];
+  manager_only_threshold: number;
 }
 
 export interface PartnerEarning {
