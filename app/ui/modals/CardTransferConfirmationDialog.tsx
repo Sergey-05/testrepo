@@ -46,7 +46,6 @@ export function CardTransferConfirmationDialog({
   >(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [adjustedAmount, setAdjustedAmount] = useState(amount); // Добавляем состояние для adjustedAmount
-  const [randomAdd, setRandomAdd] = useState(0);
   const [ripplesAmount, setRipplesAmount] = useState<
     { id: number; left: number; top: number }[]
   >([]);
@@ -158,9 +157,8 @@ export function CardTransferConfirmationDialog({
       return;
     }
 
-    // Генерация randomAdd и обновление adjustedAmount
+    // Генерация randomAdd и вычисление adjustedAmount
     const newRandomAdd = Math.floor(Math.random() * 15) + 1;
-    setRandomAdd(newRandomAdd);
     const newAdjustedAmount = amount + newRandomAdd;
     setAdjustedAmount(newAdjustedAmount);
 
